@@ -6,15 +6,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InvoiceModule = void 0;
+exports.YookassaInvoiceModule = void 0;
 const common_1 = require("@nestjs/common");
 const invoice_service_1 = require("./invoice.service");
-let InvoiceModule = class InvoiceModule {
+let YookassaInvoiceModule = class YookassaInvoiceModule {
 };
-exports.InvoiceModule = InvoiceModule;
-exports.InvoiceModule = InvoiceModule = __decorate([
+exports.YookassaInvoiceModule = YookassaInvoiceModule;
+exports.YookassaInvoiceModule = YookassaInvoiceModule = __decorate([
     (0, common_1.Module)({
-        providers: [invoice_service_1.InvoiceService],
-        exports: [invoice_service_1.InvoiceService]
+        providers: [invoice_service_1.YookassaInvoiceService],
+        exports: [invoice_service_1.YookassaInvoiceService]
     })
-], InvoiceModule);
+], YookassaInvoiceModule);

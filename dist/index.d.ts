@@ -1,5 +1,4 @@
 export * from './payment-hub.module';
-export * from './payment-hub.service';
 export * from './common/enums';
 export * from './common/interfaces';
 export * from './common/types/metadata.type';
@@ -13,7 +12,7 @@ export * from './modules/yookassa/receipt/enums';
 export * from './modules/yookassa/receipt/interfaces';
 export * from './modules/yookassa/refund/enums';
 export * from './modules/yookassa/refund/interfaces';
-export * from './webhook/decorators';
-export * from './webhook/enums';
-export * from './webhook/guards/yookassa-webhook.guard';
-export * from './webhook/interfaces';
+export * from './modules/yookassa/webhook/decorators';
+export * from './modules/yookassa/webhook/enums';
+export * from './modules/yookassa/webhook/guards/yookassa-webhook.guard';
+export * from './modules/yookassa/webhook/interfaces';

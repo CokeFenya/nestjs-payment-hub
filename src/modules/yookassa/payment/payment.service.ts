@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 
 import type { YookassaMetadata } from '../../../common/types/metadata.type'
-import { YookassaHttpClient } from '../../../core/yookassa/http/yookassa.http-client'
+import { YookassaHttpClient } from '../core/http/yookassa.http-client'
 import type {
 	CreatePaymentRequest,
 	CreatePaymentResponse,
@@ -11,7 +11,7 @@ import type {
 } from './interfaces'
 
 @Injectable()
-export class PaymentService {
+export class YookassaPaymentService {
 	public constructor(private readonly http: YookassaHttpClient) {}
 
 	/**

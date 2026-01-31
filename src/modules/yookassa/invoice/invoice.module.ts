@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
-import { InvoiceService } from './invoice.service'
+import { YookassaInvoiceService } from './invoice.service'
 
 @Module({
-	providers: [InvoiceService],
-	exports: [InvoiceService]
+	providers: [YookassaInvoiceService],
+	exports: [YookassaInvoiceService]
 })
-export class InvoiceModule {}
+export class YookassaInvoiceModule {}

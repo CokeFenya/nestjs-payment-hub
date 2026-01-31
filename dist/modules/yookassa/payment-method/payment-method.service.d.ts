@@ -1,6 +1,6 @@
-import { YookassaHttpClient } from '../../../core/yookassa/http/yookassa.http-client';
+import { YookassaHttpClient } from '../core/http/yookassa.http-client';
 import type { CreatePaymentMethodRequest, CreatePaymentMethodResponse, PaymentMethodDetails } from './interfaces';
-export declare class PaymentMethodService {
+export declare class YookassaPaymentMethodService {
     private readonly http;
     constructor(http: YookassaHttpClient);
     /**

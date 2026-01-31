@@ -1,6 +1,6 @@
-import { YookassaHttpClient } from '../../../core/yookassa/http/yookassa.http-client';
+import { YookassaHttpClient } from '../core/http/yookassa.http-client';
 import type { CreateRefundRequest, CreateRefundResponse, GetRefundsRequest, GetRefundsResponse, Refund } from './interfaces';
-export declare class RefundService {
+export declare class YookassaRefundService {
     private readonly http;
     constructor(http: YookassaHttpClient);
     /**

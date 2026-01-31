@@ -1,2 +1,2 @@
-export declare class InvoiceModule {
+export declare class YookassaInvoiceModule {
 }

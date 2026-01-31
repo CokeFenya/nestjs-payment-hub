@@ -16,7 +16,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // Core exports
 __exportStar(require("./payment-hub.module"), exports);
-__exportStar(require("./payment-hub.service"), exports);
 // Common
 __exportStar(require("./common/enums"), exports);
 __exportStar(require("./common/interfaces"), exports);
@@ -37,7 +36,7 @@ __exportStar(require("./modules/yookassa/receipt/interfaces"), exports);
 __exportStar(require("./modules/yookassa/refund/enums"), exports);
 __exportStar(require("./modules/yookassa/refund/interfaces"), exports);
 // Webhook domain
-__exportStar(require("./webhook/decorators"), exports);
-__exportStar(require("./webhook/enums"), exports);
-__exportStar(require("./webhook/guards/yookassa-webhook.guard"), exports);
-__exportStar(require("./webhook/interfaces"), exports);
+__exportStar(require("./modules/yookassa/webhook/decorators"), exports);
+__exportStar(require("./modules/yookassa/webhook/enums"), exports);
+__exportStar(require("./modules/yookassa/webhook/guards/yookassa-webhook.guard"), exports);
+__exportStar(require("./modules/yookassa/webhook/interfaces"), exports);

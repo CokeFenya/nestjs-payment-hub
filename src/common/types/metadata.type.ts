@@ -7,4 +7,6 @@
  * - Значение ключа не больше 512 символов
  * - Тип данных — строка в формате UTF-8
  */
-export type YookassaMetadata<T extends Record<string, string> = Record<string, string>> = T
+export type YookassaMetadata<
+	T extends Record<string, string> = Record<string, string>
+> = T

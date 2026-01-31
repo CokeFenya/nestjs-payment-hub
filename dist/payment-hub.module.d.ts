@@ -14,8 +14,9 @@ export declare class PaymentHubModule {
      *     shopId: 'your_shop_id',
      *     apiKey: 'your_api_key',
      *   },
-     *   tbank: {
-     *     // пока модуля нет — просто лежит в конфиге
+     *   crypto: {
+     *     apiToken: 'token',
+     *     testnet: true,
      *   }
      * });
      * ```
@@ -24,26 +25,6 @@ export declare class PaymentHubModule {
     /**
      * Метод для регистрации модуля с асинхронной конфигурацией.
      * Этот метод используется для конфигурации модуля с параметрами, которые будут переданы через фабричную функцию.
-     * @param {PaymentHubModuleAsyncOptions} options - Асинхронные параметры для конфигурации PaymentHub.
-     * @returns {DynamicModule} Возвращает динамический модуль с необходимыми провайдерами и импортами.
-     *
-     * @example
-     * ```ts
-     * PaymentHubModule.forRootAsync({
-     *   imports: [ConfigModule],
-     *   inject: [ConfigService],
-     *   useFactory: (cfg: ConfigService) => ({
-     *     yookassa: {
-     *       shopId: cfg.getOrThrow('YOOKASSA_SHOP_ID'),
-     *       apiKey: cfg.getOrThrow('YOOKASSA_SECRET_KEY'),
-     *       proxyUrl: cfg.get('YOOKASSA_PROXY_URL'),
-     *     },
-     *     tbank: {
-     *       // пока модуля нет — просто лежит в конфиге
-     *     },
-     *   }),
-     * })
-     * ```
      */
     static forRootAsync(options: PaymentHubModuleAsyncOptions): DynamicModule;
 }

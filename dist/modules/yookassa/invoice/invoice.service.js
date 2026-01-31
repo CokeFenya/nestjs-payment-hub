@@ -9,10 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InvoiceService = void 0;
+exports.YookassaInvoiceService = void 0;
 const common_1 = require("@nestjs/common");
-const yookassa_http_client_1 = require("../../../core/yookassa/http/yookassa.http-client");
-let InvoiceService = class InvoiceService {
+const yookassa_http_client_1 = require("../core/http/yookassa.http-client");
+let YookassaInvoiceService = class YookassaInvoiceService {
     constructor(http) {
         this.http = http;
     }
@@ -59,8 +59,8 @@ let InvoiceService = class InvoiceService {
         return this.http.get(`/invoices/${id}`);
     }
 };
-exports.InvoiceService = InvoiceService;
-exports.InvoiceService = InvoiceService = __decorate([
+exports.YookassaInvoiceService = YookassaInvoiceService;
+exports.YookassaInvoiceService = YookassaInvoiceService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [yookassa_http_client_1.YookassaHttpClient])
-], InvoiceService);
+], YookassaInvoiceService);

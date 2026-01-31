@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
-import { PaymentMethodService } from './payment-method.service'
+import { YookassaPaymentMethodService } from './payment-method.service'
 
 @Module({
-	providers: [PaymentMethodService],
-	exports: [PaymentMethodService]
+	providers: [YookassaPaymentMethodService],
+	exports: [YookassaPaymentMethodService]
 })
-export class PaymentMethodModule {}
+export class YookassaPaymentMethodModule {}

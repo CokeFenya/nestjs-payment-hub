@@ -1,7 +1,7 @@
 import type { YookassaMetadata } from '../../../common/types/metadata.type';
-import { YookassaHttpClient } from '../../../core/yookassa/http/yookassa.http-client';
+import { YookassaHttpClient } from '../core/http/yookassa.http-client';
 import type { CreatePaymentRequest, CreatePaymentResponse, GetPaymentsRequest, GetPaymentsResponse, Payment } from './interfaces';
-export declare class PaymentService {
+export declare class YookassaPaymentService {
     private readonly http;
     constructor(http: YookassaHttpClient);
     /**

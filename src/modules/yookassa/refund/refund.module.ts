@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
-import { RefundService } from './refund.service'
+import { YookassaRefundService } from './refund.service'
 
 @Module({
-	providers: [RefundService],
-	exports: [RefundService]
+	providers: [YookassaRefundService],
+	exports: [YookassaRefundService]
 })
-export class RefundModule {}
+export class YookassaRefundModule {}
