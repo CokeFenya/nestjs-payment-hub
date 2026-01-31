@@ -1,5 +1,6 @@
 // Core exports
 export * from './payment-hub.module'
+export * from './payment-hub.service'
 
 // Common
 export * from './common/enums'

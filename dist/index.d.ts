@@ -1,4 +1,5 @@
 export * from './payment-hub.module';
+export * from './payment-hub.service';
 export * from './common/enums';
 export * from './common/interfaces';
 export * from './common/types/metadata.type';

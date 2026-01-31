@@ -16,6 +16,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // Core exports
 __exportStar(require("./payment-hub.module"), exports);
+__exportStar(require("./payment-hub.service"), exports);
 // Common
 __exportStar(require("./common/enums"), exports);
 __exportStar(require("./common/interfaces"), exports);
