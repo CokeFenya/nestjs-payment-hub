@@ -1,6 +1,6 @@
 {
 	"name": "nestjs-payment-hub",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "A NestJS payment hub library with pluggable providers (YooKassa, UnitPay, T-Bank, crypto, etc.)",
 	"keywords": [
 		"nest",
