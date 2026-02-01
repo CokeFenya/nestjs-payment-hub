@@ -1,7 +1,11 @@
-import { CryptoProviderService } from './modules/crypto/crypto-provider.service';
-import { YookassaProviderService } from './modules/yookassa/yookassa-provider.service';
+import { YookassaInvoiceService } from './modules/yookassa/invoice/invoice.service';
+import { YookassaPaymentMethodService } from './modules/yookassa/payment-method/payment-method.service';
+import { YookassaPaymentService } from './modules/yookassa/payment/payment.service';
+import { YookassaRefundService } from './modules/yookassa/refund/refund.service';
 export declare class PaymentHubService {
-    readonly yookassa?: YookassaProviderService;
-    readonly crypto?: CryptoProviderService;
-    constructor(yookassa?: YookassaProviderService, crypto?: CryptoProviderService);
+    payments: YookassaPaymentService;
+    paymentMethods: YookassaPaymentMethodService;
+    invoices: YookassaInvoiceService;
+    refunds: YookassaRefundService;
+    constructor(payments: YookassaPaymentService, paymentMethods: YookassaPaymentMethodService, invoices: YookassaInvoiceService, refunds: YookassaRefundService);
 }

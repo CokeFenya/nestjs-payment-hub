@@ -8,25 +8,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentHubService = void 0;
 const common_1 = require("@nestjs/common");
-const crypto_provider_service_1 = require("./modules/crypto/crypto-provider.service");
-const yookassa_provider_service_1 = require("./modules/yookassa/yookassa-provider.service");
+const invoice_service_1 = require("./modules/yookassa/invoice/invoice.service");
+const payment_method_service_1 = require("./modules/yookassa/payment-method/payment-method.service");
+const payment_service_1 = require("./modules/yookassa/payment/payment.service");
+const refund_service_1 = require("./modules/yookassa/refund/refund.service");
 let PaymentHubService = class PaymentHubService {
-    constructor(yookassa, crypto) {
-        this.yookassa = yookassa;
-        this.crypto = crypto;
+    constructor(payments, paymentMethods, invoices, refunds) {
+        this.payments = payments;
+        this.paymentMethods = paymentMethods;
+        this.invoices = invoices;
+        this.refunds = refunds;
     }
 };
 exports.PaymentHubService = PaymentHubService;
 exports.PaymentHubService = PaymentHubService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, common_1.Optional)()),
-    __param(1, (0, common_1.Optional)()),
-    __metadata("design:paramtypes", [yookassa_provider_service_1.YookassaProviderService,
-        crypto_provider_service_1.CryptoProviderService])
+    __metadata("design:paramtypes", [payment_service_1.YookassaPaymentService,
+        payment_method_service_1.YookassaPaymentMethodService,
+        invoice_service_1.YookassaInvoiceService,
+        refund_service_1.YookassaRefundService])
 ], PaymentHubService);

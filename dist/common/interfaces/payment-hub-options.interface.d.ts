@@ -1,5 +1,4 @@
 import type { FactoryProvider, ModuleMetadata } from '@nestjs/common';
-import { CryptoModuleOptions } from './crypto/crypto-options.interface';
 import type { YookassaModuleOptions } from './yookassa/yookassa-options.interface';
 export declare const PaymentHubOptionsSymbol: unique symbol;
 /**
@@ -7,9 +6,17 @@ export declare const PaymentHubOptionsSymbol: unique symbol;
  * Каждый провайдер хранит свой конфиг в отдельном поле.
  */
 export type PaymentHubModuleOptions = {
+    /**
+     * Настройки провайдера YooKassa.
+     */
     yookassa?: YookassaModuleOptions;
-    crypto?: CryptoModuleOptions;
+    /**
+     * Настройки провайдера UnitPay.
+     */
     unitpay?: any;
+    /**
+     * Настройки провайдера T-Bank.
+     */
     tbank?: any;
 };
 /**
