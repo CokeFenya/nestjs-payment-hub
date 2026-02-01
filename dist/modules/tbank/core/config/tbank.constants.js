@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TBANK_DEFAULTS = void 0;
 exports.TBANK_DEFAULTS = {
-    baseUrl: 'https://securepay.tinkoff.ru',
+    // ✅ для DEMO/TEST терминалов
+    baseUrl: 'https://rest-api-test.tinkoff.ru',
     timeoutMs: 15000
 };

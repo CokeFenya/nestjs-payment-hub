@@ -17,6 +17,6 @@ exports.TbankWebhookModule = TbankWebhookModule = __decorate([
     (0, common_1.Module)({
         imports: [tbank_core_module_1.TbankCoreModule],
         providers: [tbank_webhook_guard_1.TbankWebhookGuard],
-        exports: [tbank_core_module_1.TbankCoreModule, tbank_webhook_guard_1.TbankWebhookGuard]
+        exports: [tbank_webhook_guard_1.TbankWebhookGuard]
     })
 ], TbankWebhookModule);

@@ -30,7 +30,11 @@ export function createTbankToken(
 	pairs.sort(([a], [b]) => a.localeCompare(b))
 
 	const concatenated = pairs.map(([, v]) => v).join('')
-	return createHash('sha256').update(concatenated, 'utf8').digest('hex')
+
+	return createHash('sha256')
+		.update(concatenated, 'utf8')
+		.digest('hex')
+		.toUpperCase()
 }
 
 export class TbankHttpClient {
@@ -38,7 +42,7 @@ export class TbankHttpClient {
 	private readonly terminalKey: string
 	private readonly password: string
 
-	public constructor(private readonly options: TbankModuleOptions) {
+	public constructor(options: TbankModuleOptions) {
 		const baseUrl = options.baseUrl ?? TBANK_DEFAULTS.baseUrl
 		const timeout = options.timeoutMs ?? TBANK_DEFAULTS.timeoutMs
 

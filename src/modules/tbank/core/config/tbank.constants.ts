@@ -1,4 +1,5 @@
 export const TBANK_DEFAULTS = {
-	baseUrl: 'https://securepay.tinkoff.ru',
+	// ✅ для DEMO/TEST терминалов
+	baseUrl: 'https://rest-api-test.tinkoff.ru',
 	timeoutMs: 15000
 } as const

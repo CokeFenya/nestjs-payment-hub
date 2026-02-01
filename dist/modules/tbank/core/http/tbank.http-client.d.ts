@@ -1,7 +1,6 @@
 import type { TbankModuleOptions } from '../../../../common/interfaces';
 export declare function createTbankToken(root: Record<string, unknown>, password: string, excludeKeys?: readonly string[]): string;
 export declare class TbankHttpClient {
-    private readonly options;
     private readonly http;
     private readonly terminalKey;
     private readonly password;

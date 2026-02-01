@@ -24,12 +24,14 @@ function createTbankToken(root, password, excludeKeys = ['Token', 'Password']) {
     pairs.push(['Password', password]);
     pairs.sort(([a], [b]) => a.localeCompare(b));
     const concatenated = pairs.map(([, v]) => v).join('');
-    return (0, crypto_1.createHash)('sha256').update(concatenated, 'utf8').digest('hex');
+    return (0, crypto_1.createHash)('sha256')
+        .update(concatenated, 'utf8')
+        .digest('hex')
+        .toUpperCase();
 }
 class TbankHttpClient {
     constructor(options) {
         var _a, _b;
-        this.options = options;
         const baseUrl = (_a = options.baseUrl) !== null && _a !== void 0 ? _a : tbank_constants_1.TBANK_DEFAULTS.baseUrl;
         const timeout = (_b = options.timeoutMs) !== null && _b !== void 0 ? _b : tbank_constants_1.TBANK_DEFAULTS.timeoutMs;
         this.terminalKey = options.terminalKey;
