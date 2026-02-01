@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
-import type { TbankOptions } from '../../../../common/interfaces/tbank/tbank-options.interface';
+import type { TbankModuleOptions } from '../../../../common/interfaces/tbank/tbank-options.interface';
 export declare class TbankWebhookGuard implements CanActivate {
     private readonly opts;
-    constructor(opts: TbankOptions);
+    constructor(opts: TbankModuleOptions);
     canActivate(ctx: ExecutionContext): boolean;
 }

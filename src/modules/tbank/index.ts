@@ -3,7 +3,7 @@ export * from './tbank.module'
 
 export * from './core/config/tbank.constants'
 export * from './core/http/errors/tbank.error'
-export * from './core/http/tbank.http-client'
+
 export * from './core/tbank-core.module'
 
 export * from './payment/enums'

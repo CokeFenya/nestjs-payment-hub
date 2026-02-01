@@ -1,8 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common'
 import axios, { type AxiosInstance } from 'axios'
 import { createHash } from 'crypto'
-import type { TbankOptions } from '../../../../common/interfaces/tbank/tbank-options.interface'
-import { TBANK_DEFAULTS, TBANK_OPTIONS } from '../config/tbank.constants'
+import type { TbankModuleOptions } from '../../../../common/interfaces'
 import { TbankError } from './errors/tbank.error'
 
 type Primitive = string | number | boolean | null | undefined
@@ -11,17 +9,11 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
 	return typeof v === 'object' && v !== null && !Array.isArray(v)
 }
 
-/**
- * Token (подпись) T-Bank:
- * - учитываем только поля ВЕРХНЕГО уровня (примитивы), вложенные объекты/массивы исключаем
- * - исключаем Token и Password
- * - добавляем Password
- * - сортируем ключи по алфавиту
- * - склеиваем значения
- * - sha256 hex
- *
- * Док: формирование Token. :contentReference[oaicite:0]{index=0}
- */
+export const TBANK_DEFAULTS = {
+	baseUrl: 'https://securepay.tinkoff.ru',
+	timeoutMs: 15000
+} as const
+
 export function createTbankToken(
 	root: Record<string, unknown>,
 	password: string,
@@ -45,13 +37,12 @@ export function createTbankToken(
 	return createHash('sha256').update(concatenated, 'utf8').digest('hex')
 }
 
-@Injectable()
 export class TbankHttpClient {
 	private readonly http: AxiosInstance
 	private readonly terminalKey: string
 	private readonly password: string
 
-	public constructor(@Inject(TBANK_OPTIONS) options: TbankOptions) {
+	public constructor(options: TbankModuleOptions) {
 		const baseUrl = options.baseUrl ?? TBANK_DEFAULTS.baseUrl
 		const timeout = options.timeoutMs ?? TBANK_DEFAULTS.timeoutMs
 
@@ -72,13 +63,16 @@ export class TbankHttpClient {
 		const signed = this.sign(body)
 		const { data } = await this.http.post<TResponse>(path, signed)
 
-		if (isPlainObject(data) && data.Success === false) {
+		if (isPlainObject(data) && (data as any).Success === false) {
 			throw new TbankError(
-				String(data.Message ?? data.Details ?? 'T-Bank API error'),
+				String(
+					(data as any).Message ??
+						(data as any).Details ??
+						'T-Bank API error'
+				),
 				data
 			)
 		}
-
 		return data
 	}
 
@@ -98,10 +92,8 @@ export class TbankHttpClient {
 		}
 
 		if (!merged.TerminalKey) merged.TerminalKey = this.terminalKey
-
-		if (!merged.Token) {
+		if (!merged.Token)
 			merged.Token = createTbankToken(merged, this.password)
-		}
 
 		return merged as TBody & Record<string, unknown>
 	}

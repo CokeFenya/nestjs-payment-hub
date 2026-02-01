@@ -18,7 +18,6 @@ __exportStar(require("./tbank-provider.service"), exports);
 __exportStar(require("./tbank.module"), exports);
 __exportStar(require("./core/config/tbank.constants"), exports);
 __exportStar(require("./core/http/errors/tbank.error"), exports);
-__exportStar(require("./core/http/tbank.http-client"), exports);
 __exportStar(require("./core/tbank-core.module"), exports);
 __exportStar(require("./payment/enums"), exports);
 __exportStar(require("./payment/interfaces"), exports);

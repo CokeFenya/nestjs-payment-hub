@@ -1,27 +1,36 @@
 import { Module } from '@nestjs/common'
-import type { PaymentHubModuleOptions } from '../../../common/interfaces/payment-hub-options.interface'
-import { PaymentHubOptionsSymbol } from '../../../common/interfaces/payment-hub-options.interface'
-import type { TbankOptions } from '../../../common/interfaces/tbank/tbank-options.interface'
 
-import { TBANK_OPTIONS } from './config/tbank.constants'
+import type { PaymentHubModuleOptions } from '../../../common/interfaces'
+import { PaymentHubOptionsSymbol } from '../../../common/interfaces'
+
+import type { TbankModuleOptions } from '../../../common/interfaces'
+import { TbankOptionsSymbol } from '../../../common/interfaces'
+
+import { PaymentHubContextModule } from '../../../common/payment-hub-context.module'
 import { TbankHttpClient } from './http/tbank.http-client'
 
 @Module({
+	imports: [PaymentHubContextModule],
 	providers: [
 		{
-			provide: TBANK_OPTIONS,
-			useFactory: (opts: PaymentHubModuleOptions): TbankOptions => {
-				if (!opts?.tbank) {
+			provide: TbankOptionsSymbol,
+			useFactory: (hub: PaymentHubModuleOptions): TbankModuleOptions => {
+				const cfg = hub.tbank
+				if (!cfg) {
 					throw new Error(
-						'Tbank options are missing. Provide { tbank: { terminalKey, password } } in PaymentHubModule.forRoot(...)'
+						'[PaymentHub] T-Bank config is missing. Provide options.tbank'
 					)
 				}
-				return opts.tbank
+				return cfg
 			},
 			inject: [PaymentHubOptionsSymbol]
 		},
-		TbankHttpClient
+		{
+			provide: TbankHttpClient,
+			useFactory: (cfg: TbankModuleOptions) => new TbankHttpClient(cfg),
+			inject: [TbankOptionsSymbol]
+		}
 	],
-	exports: [TBANK_OPTIONS, TbankHttpClient]
+	exports: [TbankOptionsSymbol, TbankHttpClient]
 })
 export class TbankCoreModule {}

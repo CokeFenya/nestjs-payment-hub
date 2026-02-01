@@ -22,7 +22,7 @@ let PaymentHubModule = PaymentHubModule_1 = class PaymentHubModule {
                 payment_hub_context_module_1.PaymentHubContextModule.forRoot(options),
                 yookassa_module_1.YookassaModule,
                 crypto_1.CryptoModule,
-                tbank_1.TbankModule // ✅ ДОБАВЬ
+                tbank_1.TbankModule
             ],
             providers: [payment_hub_service_1.PaymentHubService],
             exports: [payment_hub_service_1.PaymentHubService],
@@ -36,7 +36,7 @@ let PaymentHubModule = PaymentHubModule_1 = class PaymentHubModule {
                 payment_hub_context_module_1.PaymentHubContextModule.forRootAsync(options),
                 yookassa_module_1.YookassaModule,
                 crypto_1.CryptoModule,
-                tbank_1.TbankModule // ✅ ДОБАВЬ
+                tbank_1.TbankModule
             ],
             providers: [payment_hub_service_1.PaymentHubService],
             exports: [payment_hub_service_1.PaymentHubService],

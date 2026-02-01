@@ -21,7 +21,7 @@ export class PaymentHubModule {
 				PaymentHubContextModule.forRoot(options),
 				YookassaModule,
 				CryptoModule,
-				TbankModule // ✅ ДОБАВЬ
+				TbankModule
 			],
 			providers: [PaymentHubService],
 			exports: [PaymentHubService],
@@ -38,7 +38,7 @@ export class PaymentHubModule {
 				PaymentHubContextModule.forRootAsync(options),
 				YookassaModule,
 				CryptoModule,
-				TbankModule // ✅ ДОБАВЬ
+				TbankModule
 			],
 			providers: [PaymentHubService],
 			exports: [PaymentHubService],

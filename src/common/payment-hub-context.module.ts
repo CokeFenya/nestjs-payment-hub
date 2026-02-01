@@ -1,5 +1,4 @@
 import { Global, Module, type DynamicModule } from '@nestjs/common'
-
 import type {
 	PaymentHubModuleAsyncOptions,
 	PaymentHubModuleOptions

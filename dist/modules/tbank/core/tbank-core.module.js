@@ -8,27 +8,34 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankCoreModule = void 0;
 const common_1 = require("@nestjs/common");
-const payment_hub_options_interface_1 = require("../../../common/interfaces/payment-hub-options.interface");
-const tbank_constants_1 = require("./config/tbank.constants");
+const interfaces_1 = require("../../../common/interfaces");
+const interfaces_2 = require("../../../common/interfaces");
+const payment_hub_context_module_1 = require("../../../common/payment-hub-context.module");
 const tbank_http_client_1 = require("./http/tbank.http-client");
 let TbankCoreModule = class TbankCoreModule {
 };
 exports.TbankCoreModule = TbankCoreModule;
 exports.TbankCoreModule = TbankCoreModule = __decorate([
     (0, common_1.Module)({
+        imports: [payment_hub_context_module_1.PaymentHubContextModule],
         providers: [
             {
-                provide: tbank_constants_1.TBANK_OPTIONS,
-                useFactory: (opts) => {
-                    if (!(opts === null || opts === void 0 ? void 0 : opts.tbank)) {
-                        throw new Error('Tbank options are missing. Provide { tbank: { terminalKey, password } } in PaymentHubModule.forRoot(...)');
+                provide: interfaces_2.TbankOptionsSymbol,
+                useFactory: (hub) => {
+                    const cfg = hub.tbank;
+                    if (!cfg) {
+                        throw new Error('[PaymentHub] T-Bank config is missing. Provide options.tbank');
                     }
-                    return opts.tbank;
+                    return cfg;
                 },
-                inject: [payment_hub_options_interface_1.PaymentHubOptionsSymbol]
+                inject: [interfaces_1.PaymentHubOptionsSymbol]
             },
-            tbank_http_client_1.TbankHttpClient
+            {
+                provide: tbank_http_client_1.TbankHttpClient,
+                useFactory: (cfg) => new tbank_http_client_1.TbankHttpClient(cfg),
+                inject: [interfaces_2.TbankOptionsSymbol]
+            }
         ],
-        exports: [tbank_constants_1.TBANK_OPTIONS, tbank_http_client_1.TbankHttpClient]
+        exports: [interfaces_2.TbankOptionsSymbol, tbank_http_client_1.TbankHttpClient]
     })
 ], TbankCoreModule);

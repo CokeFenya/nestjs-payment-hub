@@ -6,14 +6,14 @@ import {
 	Injectable
 } from '@nestjs/common'
 import type { Request } from 'express'
-import type { TbankOptions } from '../../../../common/interfaces/tbank/tbank-options.interface'
+import type { TbankModuleOptions } from '../../../../common/interfaces/tbank/tbank-options.interface'
 import { TBANK_OPTIONS } from '../../core/config/tbank.constants'
 import { createTbankToken } from '../../core/http/tbank.http-client'
 
 @Injectable()
 export class TbankWebhookGuard implements CanActivate {
 	public constructor(
-		@Inject(TBANK_OPTIONS) private readonly opts: TbankOptions
+		@Inject(TBANK_OPTIONS) private readonly opts: TbankModuleOptions
 	) {}
 
 	public canActivate(ctx: ExecutionContext): boolean {
