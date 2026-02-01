@@ -1,4 +1,3 @@
-// src/payment-hub.module.ts
 import { Global, Module, type DynamicModule } from '@nestjs/common'
 
 import type {
@@ -7,6 +6,7 @@ import type {
 } from './common/interfaces'
 
 import { PaymentHubContextModule } from './common/payment-hub-context.module'
+import { CryptoModule } from './modules/crypto'
 import { YookassaModule } from './modules/yookassa/yookassa.module'
 import { PaymentHubService } from './payment-hub.service'
 
@@ -16,7 +16,11 @@ export class PaymentHubModule {
 	public static forRoot(options: PaymentHubModuleOptions): DynamicModule {
 		return {
 			module: PaymentHubModule,
-			imports: [PaymentHubContextModule.forRoot(options), YookassaModule],
+			imports: [
+				PaymentHubContextModule.forRoot(options),
+				YookassaModule,
+				CryptoModule
+			],
 			providers: [PaymentHubService],
 			exports: [PaymentHubService],
 			global: true
@@ -30,7 +34,8 @@ export class PaymentHubModule {
 			module: PaymentHubModule,
 			imports: [
 				PaymentHubContextModule.forRootAsync(options),
-				YookassaModule
+				YookassaModule,
+				CryptoModule
 			],
 			providers: [PaymentHubService],
 			exports: [PaymentHubService],

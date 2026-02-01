@@ -1,5 +1,4 @@
 "use strict";
-// src/index.ts
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -15,14 +14,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// Core exports
 __exportStar(require("./payment-hub.module"), exports);
 __exportStar(require("./payment-hub.service"), exports);
-// Common public API
 __exportStar(require("./common/enums"), exports);
 __exportStar(require("./common/interfaces"), exports);
 __exportStar(require("./common/types/metadata.type"), exports);
-// (если хочешь, чтобы внешние могли импортнуть этот модуль напрямую)
-__exportStar(require("./common/payment-hub-context.module"), exports);
-// Providers
 __exportStar(require("./modules/yookassa"), exports);

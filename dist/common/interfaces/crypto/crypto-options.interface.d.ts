@@ -1,19 +1,11 @@
-import type { FactoryProvider, ModuleMetadata } from '@nestjs/common';
-export declare const CryptoOptionsSymbol: unique symbol;
-export type CryptoModuleOptions = {
+export interface CryptoPayModuleOptions {
     /**
-     * API Token из @CryptoBot -> Crypto Pay -> Create App
-     * Передаётся в заголовке Crypto-Pay-API-Token
+     * API token из @CryptoBot -> Crypto Pay -> Create App
      */
-    apiToken: string;
+    token: string;
     /**
-     * testnet-pay.crypt.bot вместо pay.crypt.bot
+     * true -> https://testnet-pay.crypt.bot
+     * false/undefined -> https://pay.crypt.bot
      */
     testnet?: boolean;
-    /**
-     * Необязательно, если хочешь переопределять вручную.
-     * По умолчанию берём из testnet флага.
-     */
-    baseUrl?: string;
-};
-export type CryptoModuleAsyncOptions = Pick<ModuleMetadata, 'imports'> & Pick<FactoryProvider<CryptoModuleOptions>, 'useFactory' | 'inject'>;
+}

@@ -1,42 +1,26 @@
-import { CryptoAssetEnum, CryptoCurrencyTypeEnum, CryptoPaidButtonNameEnum } from '../../enums';
-export type CreateCryptoInvoiceRequest = {
+import { CryptoPayAssetEnum } from '../../enums/asset.enum';
+import { CryptoPayCurrencyTypeEnum } from '../../enums/currency-type.enum';
+export interface CreateCryptoInvoiceRequest {
     /**
-     * crypto | fiat. Если fiat — обязательно fiat=RUB и можно accepted_assets.
+     * For crypto invoices: asset + amount
      */
-    currency_type?: CryptoCurrencyTypeEnum;
+    asset?: CryptoPayAssetEnum;
+    amount?: string;
     /**
-     * Required если currency_type=crypto
+     * For fiat invoices: currency_type=fiat + fiat + amount (+ accepted_assets)
      */
-    asset?: CryptoAssetEnum;
-    /**
-     * Required если currency_type=fiat (например RUB)
-     */
+    currency_type?: CryptoPayCurrencyTypeEnum;
     fiat?: string;
-    /**
-     * Список ассетов через запятую (только для fiat).
-     * Например: "USDT,TON,BTC"
-     */
-    accepted_assets?: string;
-    /**
-     * Сумма инвойса (float как string), например "100.00"
-     */
-    amount: string;
+    accepted_assets?: CryptoPayAssetEnum[];
     description?: string;
     hidden_message?: string;
-    paid_btn_name?: CryptoPaidButtonNameEnum;
+    paid_btn_name?: 'viewItem' | 'openChannel' | 'openBot' | 'callback';
     paid_btn_url?: string;
-    /**
-     * Любые данные до 4kb: transactionId, userId, purpose, playerName...
-     */
     payload?: string;
     allow_comments?: boolean;
     allow_anonymous?: boolean;
     /**
-     * Лимит времени оплаты в секундах (1..2678400)
+     * seconds
      */
     expires_in?: number;
-    /**
-     * Новое поле (1.5.1): swap_to
-     */
-    swap_to?: string;
-};
+}

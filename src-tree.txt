@@ -57,6 +57,7 @@ FILE src\modules\yookassa\core\http\errors\yookassa.error.ts
 FILE src\modules\yookassa\core\http\yookassa.http-client.ts
 FILE src\modules\yookassa\core\http\yookassa.interceptor.ts
 FILE src\modules\yookassa\core\yookassa-core.module.ts
+FILE src\modules\yookassa\index.ts
 FILE src\modules\yookassa\invoice\enums\delivery-method.enum.ts
 FILE src\modules\yookassa\invoice\enums\index.ts
 FILE src\modules\yookassa\invoice\enums\invoice-cancellation-party.enum.ts

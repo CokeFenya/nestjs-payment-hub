@@ -1,1 +1,1 @@
-export * from './crypto-webhook-update-type.enum';
+export * from './update-type.enum';

@@ -7,14 +7,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CryptoPaymentModule = void 0;
-// src/modules/crypto/payment/payment.module.ts
 const common_1 = require("@nestjs/common");
+const crypto_core_module_1 = require("../core/crypto-core.module");
 const payment_service_1 = require("./payment.service");
 let CryptoPaymentModule = class CryptoPaymentModule {
 };
 exports.CryptoPaymentModule = CryptoPaymentModule;
 exports.CryptoPaymentModule = CryptoPaymentModule = __decorate([
     (0, common_1.Module)({
+        imports: [crypto_core_module_1.CryptoCoreModule],
         providers: [payment_service_1.CryptoPaymentService],
         exports: [payment_service_1.CryptoPaymentService]
     })

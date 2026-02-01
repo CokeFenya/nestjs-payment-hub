@@ -1,1 +1,1 @@
-export * from './crypto-webhook-update.interface';
+export * from './update.interface';

@@ -8,16 +8,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var PaymentHubModule_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentHubModule = void 0;
-// src/payment-hub.module.ts
 const common_1 = require("@nestjs/common");
 const payment_hub_context_module_1 = require("./common/payment-hub-context.module");
+const crypto_1 = require("./modules/crypto");
 const yookassa_module_1 = require("./modules/yookassa/yookassa.module");
 const payment_hub_service_1 = require("./payment-hub.service");
 let PaymentHubModule = PaymentHubModule_1 = class PaymentHubModule {
     static forRoot(options) {
         return {
             module: PaymentHubModule_1,
-            imports: [payment_hub_context_module_1.PaymentHubContextModule.forRoot(options), yookassa_module_1.YookassaModule],
+            imports: [
+                payment_hub_context_module_1.PaymentHubContextModule.forRoot(options),
+                yookassa_module_1.YookassaModule,
+                crypto_1.CryptoModule
+            ],
             providers: [payment_hub_service_1.PaymentHubService],
             exports: [payment_hub_service_1.PaymentHubService],
             global: true
@@ -28,7 +32,8 @@ let PaymentHubModule = PaymentHubModule_1 = class PaymentHubModule {
             module: PaymentHubModule_1,
             imports: [
                 payment_hub_context_module_1.PaymentHubContextModule.forRootAsync(options),
-                yookassa_module_1.YookassaModule
+                yookassa_module_1.YookassaModule,
+                crypto_1.CryptoModule
             ],
             providers: [payment_hub_service_1.PaymentHubService],
             exports: [payment_hub_service_1.PaymentHubService],

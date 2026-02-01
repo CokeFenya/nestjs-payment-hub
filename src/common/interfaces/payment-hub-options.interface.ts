@@ -1,5 +1,6 @@
 // src/common/interfaces/payment-hub-options.interface.ts
 import type { FactoryProvider, ModuleMetadata } from '@nestjs/common'
+import { CryptoPayModuleOptions } from './crypto/crypto-options.interface'
 import type { YookassaModuleOptions } from './yookassa/yookassa-options.interface'
 
 export const PaymentHubOptionsSymbol = Symbol('PaymentHubOptionsSymbol')
@@ -13,6 +14,8 @@ export type PaymentHubModuleOptions = {
 	 * Настройки провайдера YooKassa.
 	 */
 	yookassa?: YookassaModuleOptions
+
+	crypto?: CryptoPayModuleOptions
 
 	/**
 	 * Настройки провайдера UnitPay.

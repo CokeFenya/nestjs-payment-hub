@@ -1,14 +1,7 @@
-import { CryptoHttpClient } from '../core/http/crypto.http-client';
-import type { CreateCryptoInvoiceRequest, CryptoInvoice } from './interfaces';
-type GetInvoicesResult = {
-    items: CryptoInvoice[];
-};
+import { CryptoPayHttpClient } from '../core/http/crypto-pay.http-client';
+import type { CreateCryptoInvoiceRequest, CreateCryptoInvoiceResponse } from './interfaces';
 export declare class CryptoPaymentService {
     private readonly http;
-    constructor(http: CryptoHttpClient);
-    createInvoice(data: CreateCryptoInvoiceRequest): Promise<CryptoInvoice>;
-    getInvoices(params?: Record<string, any>): Promise<GetInvoicesResult>;
-    pickConfirmationUrl(invoice: CryptoInvoice): string | null;
-    verifyInvoicePaid(invoiceId: number): Promise<CryptoInvoice | null>;
+    constructor(http: CryptoPayHttpClient);
+    createInvoice(data: CreateCryptoInvoiceRequest): Promise<CreateCryptoInvoiceResponse>;
 }
-export {};

@@ -1,4 +1,3 @@
-// src/modules/yookassa/core/yookassa-core.module.ts
 import { Module } from '@nestjs/common'
 
 import type {
@@ -14,7 +13,7 @@ import { PaymentHubContextModule } from '../../../common/payment-hub-context.mod
 import { YookassaHttpClient } from './http/yookassa.http-client'
 
 @Module({
-	imports: [PaymentHubContextModule], // ✅ токен доступен
+	imports: [PaymentHubContextModule],
 	providers: [
 		{
 			provide: YookassaOptionsSymbol,

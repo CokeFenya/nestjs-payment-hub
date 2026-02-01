@@ -1,11 +1,5 @@
-import type { CryptoInvoice } from '../crypto-invoice.interface';
-export type CryptoApiOk<T> = {
-    ok: true;
-    result: T;
-};
-export type CryptoApiFail = {
-    ok: false;
-    error: string;
-};
-export type CryptoApiResponse<T> = CryptoApiOk<T> | CryptoApiFail;
-export type CreateCryptoInvoiceResponse = CryptoApiResponse<CryptoInvoice>;
+import type { CryptoPayInvoice } from '../invoice.interface';
+export interface CreateCryptoInvoiceResponse {
+    ok: boolean;
+    result: CryptoPayInvoice;
+}

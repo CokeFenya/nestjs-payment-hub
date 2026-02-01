@@ -1,5 +1,5 @@
-// src/common/payment-hub-context.module.ts
 import { Global, Module, type DynamicModule } from '@nestjs/common'
+
 import type {
 	PaymentHubModuleAsyncOptions,
 	PaymentHubModuleOptions

@@ -8,7 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var PaymentHubContextModule_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentHubContextModule = void 0;
-// src/common/payment-hub-context.module.ts
 const common_1 = require("@nestjs/common");
 const interfaces_1 = require("./interfaces");
 let PaymentHubContextModule = PaymentHubContextModule_1 = class PaymentHubContextModule {

@@ -10,16 +10,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentHubService = void 0;
-// src/payment-hub.service.ts
 const common_1 = require("@nestjs/common");
+const crypto_provider_service_1 = require("./modules/crypto/crypto-provider.service");
 const yookassa_provider_service_1 = require("./modules/yookassa/yookassa-provider.service");
 let PaymentHubService = class PaymentHubService {
-    constructor(yookassa) {
+    constructor(yookassa, crypto) {
         this.yookassa = yookassa;
+        this.crypto = crypto;
     }
 };
 exports.PaymentHubService = PaymentHubService;
 exports.PaymentHubService = PaymentHubService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [yookassa_provider_service_1.YookassaProviderService])
+    __metadata("design:paramtypes", [yookassa_provider_service_1.YookassaProviderService,
+        crypto_provider_service_1.CryptoProviderService])
 ], PaymentHubService);
