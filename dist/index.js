@@ -19,4 +19,6 @@ __exportStar(require("./payment-hub.service"), exports);
 __exportStar(require("./common/enums"), exports);
 __exportStar(require("./common/interfaces"), exports);
 __exportStar(require("./common/types/metadata.type"), exports);
+__exportStar(require("./modules/crypto"), exports); // (если нужно публично)
+__exportStar(require("./modules/tbank"), exports); // ✅ ДОБАВЬ
 __exportStar(require("./modules/yookassa"), exports);

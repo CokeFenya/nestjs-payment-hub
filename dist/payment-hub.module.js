@@ -11,6 +11,7 @@ exports.PaymentHubModule = void 0;
 const common_1 = require("@nestjs/common");
 const payment_hub_context_module_1 = require("./common/payment-hub-context.module");
 const crypto_1 = require("./modules/crypto");
+const tbank_1 = require("./modules/tbank"); // ✅ ДОБАВЬ
 const yookassa_module_1 = require("./modules/yookassa/yookassa.module");
 const payment_hub_service_1 = require("./payment-hub.service");
 let PaymentHubModule = PaymentHubModule_1 = class PaymentHubModule {
@@ -20,7 +21,8 @@ let PaymentHubModule = PaymentHubModule_1 = class PaymentHubModule {
             imports: [
                 payment_hub_context_module_1.PaymentHubContextModule.forRoot(options),
                 yookassa_module_1.YookassaModule,
-                crypto_1.CryptoModule
+                crypto_1.CryptoModule,
+                tbank_1.TbankModule // ✅ ДОБАВЬ
             ],
             providers: [payment_hub_service_1.PaymentHubService],
             exports: [payment_hub_service_1.PaymentHubService],
@@ -33,7 +35,8 @@ let PaymentHubModule = PaymentHubModule_1 = class PaymentHubModule {
             imports: [
                 payment_hub_context_module_1.PaymentHubContextModule.forRootAsync(options),
                 yookassa_module_1.YookassaModule,
-                crypto_1.CryptoModule
+                crypto_1.CryptoModule,
+                tbank_1.TbankModule // ✅ ДОБАВЬ
             ],
             providers: [payment_hub_service_1.PaymentHubService],
             exports: [payment_hub_service_1.PaymentHubService],
