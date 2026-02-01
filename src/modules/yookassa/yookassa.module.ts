@@ -1,7 +1,4 @@
-// =====================================
-// 4) UPDATE: src/modules/yookassa/yookassa.module.ts
-// (ensure core module is pulled in)
-// =====================================
+// src/modules/yookassa/yookassa.module.ts
 import { Module } from '@nestjs/common'
 
 import { YookassaCoreModule } from './core/yookassa-core.module'
@@ -14,7 +11,8 @@ import { YookassaProviderService } from './yookassa-provider.service'
 
 @Module({
 	imports: [
-		YookassaCoreModule,
+		YookassaCoreModule, // ✅ обязательно
+
 		YookassaPaymentModule,
 		YookassaRefundModule,
 		YookassaInvoiceModule,

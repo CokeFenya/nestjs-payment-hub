@@ -1,17 +1,40 @@
-// ✅ FIX: make PaymentHubOptionsSymbol visible inside YookassaCoreModule
-// Approach: create a tiny global context module that exports PaymentHubOptionsSymbol,
-// import it in PaymentHubModule + YookassaCoreModule.
-
-// ======================================================
-// 1) NEW FILE: src/common/payment-hub-context.module.ts
-// ======================================================
-import { Global, Module } from '@nestjs/common'
+// src/common/payment-hub-context.module.ts
+import { Global, Module, type DynamicModule } from '@nestjs/common'
+import type {
+	PaymentHubModuleAsyncOptions,
+	PaymentHubModuleOptions
+} from './interfaces'
 import { PaymentHubOptionsSymbol } from './interfaces'
 
 @Global()
-@Module({
-	// PaymentHubOptionsSymbol provider is registered in PaymentHubModule.forRoot/forRootAsync,
-	// but exporting the token from a global module makes it visible to core modules.
-	exports: [PaymentHubOptionsSymbol]
-})
-export class PaymentHubContextModule {}
+@Module({})
+export class PaymentHubContextModule {
+	public static forRoot(options: PaymentHubModuleOptions): DynamicModule {
+		return {
+			module: PaymentHubContextModule,
+			providers: [
+				{ provide: PaymentHubOptionsSymbol, useValue: options }
+			],
+			exports: [PaymentHubOptionsSymbol],
+			global: true
+		}
+	}
+
+	public static forRootAsync(
+		options: PaymentHubModuleAsyncOptions
+	): DynamicModule {
+		return {
+			module: PaymentHubContextModule,
+			imports: options.imports ?? [],
+			providers: [
+				{
+					provide: PaymentHubOptionsSymbol,
+					useFactory: options.useFactory,
+					inject: options.inject ?? []
+				}
+			],
+			exports: [PaymentHubOptionsSymbol],
+			global: true
+		}
+	}
+}
