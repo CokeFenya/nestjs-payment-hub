@@ -16,11 +16,35 @@ let TbankPaymentService = class TbankPaymentService {
     constructor(http) {
         this.http = http;
     }
+    /** Создание платежа (редирект на PaymentURL) */
     init(data) {
         return this.http.post('/v2/Init', data);
     }
+    /** Проверка статуса */
     getState(data) {
         return this.http.post('/v2/GetState', data);
+    }
+    // ===== SBP =====
+    sbpGetQr(data) {
+        return this.http.post('/v2/GetQr', data);
+    }
+    // ===== T-Pay =====
+    tPayQr(paymentId) {
+        // возвращает SVG строкой
+        return this.http.get(`/v2/TinkoffPay/${paymentId}/QR`);
+    }
+    tPayLink(params) {
+        const { paymentId, version } = params;
+        return this.http.get(`/v2/TinkoffPay/transactions/${paymentId}/versions/${version}/link`);
+    }
+    // ===== SberPay =====
+    sberPayLink(params) {
+        const { paymentId } = params;
+        return this.http.get(`/v2/SberPay/transactions/${paymentId}/link`);
+    }
+    // ===== MirPay =====
+    mirPayDeepLink(data) {
+        return this.http.post('/v2/MirPay/GetDeepLink', data);
     }
 };
 exports.TbankPaymentService = TbankPaymentService;
