@@ -1,3 +1,4 @@
+// src/modules/tbank/webhook/guards/tbank-webhook.guard.ts
 import {
 	CanActivate,
 	ExecutionContext,
@@ -6,38 +7,36 @@ import {
 	Injectable
 } from '@nestjs/common'
 import type { Request } from 'express'
-import type { TbankModuleOptions } from '../../../../common/interfaces/tbank/tbank-options.interface'
-import { TBANK_OPTIONS } from '../../core/config/tbank.constants'
+import type { TbankModuleOptions } from '../../../../common/interfaces'
+import { TbankOptionsSymbol } from '../../core/config/tbank.constants'
 import { createTbankToken } from '../../core/http/tbank.http-client'
 
 @Injectable()
 export class TbankWebhookGuard implements CanActivate {
 	public constructor(
-		@Inject(TBANK_OPTIONS) private readonly opts: TbankModuleOptions
+		@Inject(TbankOptionsSymbol) private readonly opts: TbankModuleOptions
 	) {}
 
 	public canActivate(ctx: ExecutionContext): boolean {
 		const req = ctx.switchToHttp().getRequest<Request>()
 		const body = (req.body ?? {}) as Record<string, unknown>
 
-		// 1. Token обязан быть
 		const received = String(body.Token ?? '')
-		if (!received) {
-			throw new ForbiddenException('Missing webhook token')
-		}
+		if (!received) throw new ForbiddenException('Missing webhook token')
 
-		// 2. Проверяем подпись (по документации T-Bank)
-		const expected = createTbankToken(body, this.opts.password)
-		if (received !== expected) {
+		// Сравниваем подпись
+		const expected = createTbankToken(body, this.opts.password, [
+			'Token',
+			'Password'
+		])
+		if (received !== expected)
 			throw new ForbiddenException('Invalid webhook token')
-		}
 
-		// 3. Доп. защита: TerminalKey должен совпадать
-		if (body.TerminalKey !== this.opts.terminalKey) {
+		// Доп. проверка терминала
+		if (String(body.TerminalKey ?? '') !== this.opts.terminalKey) {
 			throw new ForbiddenException('Invalid terminal key')
 		}
 
-		// 4. Минимальный набор обязательных полей
 		if (!body.OrderId || !body.PaymentId || !body.Status) {
 			throw new ForbiddenException('Invalid webhook payload')
 		}

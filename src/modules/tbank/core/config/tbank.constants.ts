@@ -1,6 +1,7 @@
-export const TBANK_OPTIONS = Symbol('TBANK_OPTIONS')
+// src/modules/tbank/core/config/tbank.constants.ts
+export const TbankOptionsSymbol = Symbol.for('nestjs-payment-hub:TbankOptions')
 
 export const TBANK_DEFAULTS = {
 	baseUrl: 'https://securepay.tinkoff.ru',
-	timeoutMs: 15_000
+	timeoutMs: 15000
 } as const
