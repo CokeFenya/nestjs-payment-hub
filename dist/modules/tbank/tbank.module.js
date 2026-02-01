@@ -7,17 +7,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankModule = void 0;
+// src/modules/tbank/tbank.module.ts
 const common_1 = require("@nestjs/common");
 const tbank_core_module_1 = require("./core/tbank-core.module");
 const payment_module_1 = require("./payment/payment.module");
 const tbank_provider_service_1 = require("./tbank-provider.service");
+const tbank_webhook_module_1 = require("./webhook/tbank-webhook.module");
 let TbankModule = class TbankModule {
 };
 exports.TbankModule = TbankModule;
 exports.TbankModule = TbankModule = __decorate([
     (0, common_1.Module)({
-        imports: [tbank_core_module_1.TbankCoreModule, payment_module_1.TbankPaymentModule],
+        imports: [tbank_core_module_1.TbankCoreModule, payment_module_1.TbankPaymentModule, tbank_webhook_module_1.TbankWebhookModule],
         providers: [tbank_provider_service_1.TbankProviderService],
-        exports: [tbank_provider_service_1.TbankProviderService]
+        exports: [tbank_provider_service_1.TbankProviderService, tbank_webhook_module_1.TbankWebhookModule]
     })
 ], TbankModule);

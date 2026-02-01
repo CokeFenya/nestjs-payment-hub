@@ -16,3 +16,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./decorators/tbank-webhook.decorator"), exports);
 __exportStar(require("./guards/tbank-webhook.guard"), exports);
+__exportStar(require("./tbank-webhook.module"), exports);
