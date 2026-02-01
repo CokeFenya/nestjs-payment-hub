@@ -1,4 +1,3 @@
-// src/modules/tbank/tbank.module.ts
 import { Module } from '@nestjs/common'
 import { TbankCoreModule } from './core/tbank-core.module'
 import { TbankPaymentModule } from './payment/payment.module'

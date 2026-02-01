@@ -7,7 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankWebhookModule = void 0;
-// src/modules/tbank/webhook/tbank-webhook.module.ts
 const common_1 = require("@nestjs/common");
 const tbank_core_module_1 = require("../core/tbank-core.module");
 const tbank_webhook_guard_1 = require("./guards/tbank-webhook.guard");

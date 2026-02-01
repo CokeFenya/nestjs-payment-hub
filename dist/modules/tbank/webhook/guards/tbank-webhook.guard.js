@@ -13,9 +13,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankWebhookGuard = void 0;
-// src/modules/tbank/webhook/guards/tbank-webhook.guard.ts
 const common_1 = require("@nestjs/common");
-const tbank_constants_1 = require("../../core/config/tbank.constants");
+const interfaces_1 = require("../../../../common/interfaces");
 const tbank_http_client_1 = require("../../core/http/tbank.http-client");
 let TbankWebhookGuard = class TbankWebhookGuard {
     constructor(opts) {
@@ -28,14 +27,12 @@ let TbankWebhookGuard = class TbankWebhookGuard {
         const received = String((_b = body.Token) !== null && _b !== void 0 ? _b : '');
         if (!received)
             throw new common_1.ForbiddenException('Missing webhook token');
-        // Сравниваем подпись
         const expected = (0, tbank_http_client_1.createTbankToken)(body, this.opts.password, [
             'Token',
             'Password'
         ]);
         if (received !== expected)
             throw new common_1.ForbiddenException('Invalid webhook token');
-        // Доп. проверка терминала
         if (String((_c = body.TerminalKey) !== null && _c !== void 0 ? _c : '') !== this.opts.terminalKey) {
             throw new common_1.ForbiddenException('Invalid terminal key');
         }
@@ -48,6 +45,6 @@ let TbankWebhookGuard = class TbankWebhookGuard {
 exports.TbankWebhookGuard = TbankWebhookGuard;
 exports.TbankWebhookGuard = TbankWebhookGuard = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, common_1.Inject)(tbank_constants_1.TbankOptionsSymbol)),
+    __param(0, (0, common_1.Inject)(interfaces_1.TbankOptionsSymbol)),
     __metadata("design:paramtypes", [Object])
 ], TbankWebhookGuard);

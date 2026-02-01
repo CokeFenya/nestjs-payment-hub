@@ -1,17 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TbankHttpClient = exports.TBANK_DEFAULTS = void 0;
+exports.TbankHttpClient = void 0;
 exports.createTbankToken = createTbankToken;
 const axios_1 = require("axios");
 const crypto_1 = require("crypto");
+const tbank_constants_1 = require("../config/tbank.constants");
 const tbank_error_1 = require("./errors/tbank.error");
 function isPlainObject(v) {
     return typeof v === 'object' && v !== null && !Array.isArray(v);
 }
-exports.TBANK_DEFAULTS = {
-    baseUrl: 'https://securepay.tinkoff.ru',
-    timeoutMs: 15000
-};
 function createTbankToken(root, password, excludeKeys = ['Token', 'Password']) {
     const pairs = [];
     for (const [k, v] of Object.entries(root)) {
@@ -32,8 +29,9 @@ function createTbankToken(root, password, excludeKeys = ['Token', 'Password']) {
 class TbankHttpClient {
     constructor(options) {
         var _a, _b;
-        const baseUrl = (_a = options.baseUrl) !== null && _a !== void 0 ? _a : exports.TBANK_DEFAULTS.baseUrl;
-        const timeout = (_b = options.timeoutMs) !== null && _b !== void 0 ? _b : exports.TBANK_DEFAULTS.timeoutMs;
+        this.options = options;
+        const baseUrl = (_a = options.baseUrl) !== null && _a !== void 0 ? _a : tbank_constants_1.TBANK_DEFAULTS.baseUrl;
+        const timeout = (_b = options.timeoutMs) !== null && _b !== void 0 ? _b : tbank_constants_1.TBANK_DEFAULTS.timeoutMs;
         this.terminalKey = options.terminalKey;
         this.password = options.password;
         this.http = axios_1.default.create({

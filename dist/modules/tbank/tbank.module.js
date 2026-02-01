@@ -7,7 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankModule = void 0;
-// src/modules/tbank/tbank.module.ts
 const common_1 = require("@nestjs/common");
 const tbank_core_module_1 = require("./core/tbank-core.module");
 const payment_module_1 = require("./payment/payment.module");

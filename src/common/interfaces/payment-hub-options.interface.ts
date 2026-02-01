@@ -1,10 +1,8 @@
 import type { FactoryProvider, ModuleMetadata } from '@nestjs/common'
-
 import type { CryptoPayModuleOptions } from './crypto/crypto-options.interface'
-import { TbankModuleOptions } from './tbank/tbank-options.interface'
+import type { TbankModuleOptions } from './tbank/tbank-options.interface'
 import type { YookassaModuleOptions } from './yookassa/yookassa-options.interface'
 
-// ✅ СТАБИЛЬНЫЙ токен между копиями пакета
 export const PaymentHubOptionsSymbol = Symbol.for(
 	'nestjs-payment-hub:PaymentHubOptions'
 )

@@ -136,6 +136,7 @@ FILE src\modules\tbank\tbank-provider.service.ts
 FILE src\modules\tbank\webhook\decorators\tbank-webhook.decorator.ts
 FILE src\modules\tbank\webhook\guards\tbank-webhook.guard.ts
 FILE src\modules\tbank\webhook\index.ts
+FILE src\modules\tbank\webhook\tbank-webhook.module.ts
 FILE src\modules\yookassa\core\config\yookassa.constants.ts
 FILE src\modules\yookassa\core\http\errors\yookassa.error.ts
 FILE src\modules\yookassa\core\http\yookassa.http-client.ts

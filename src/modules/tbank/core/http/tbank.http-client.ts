@@ -1,6 +1,7 @@
 import axios, { type AxiosInstance } from 'axios'
 import { createHash } from 'crypto'
 import type { TbankModuleOptions } from '../../../../common/interfaces'
+import { TBANK_DEFAULTS } from '../config/tbank.constants'
 import { TbankError } from './errors/tbank.error'
 
 type Primitive = string | number | boolean | null | undefined
@@ -8,11 +9,6 @@ type Primitive = string | number | boolean | null | undefined
 function isPlainObject(v: unknown): v is Record<string, unknown> {
 	return typeof v === 'object' && v !== null && !Array.isArray(v)
 }
-
-export const TBANK_DEFAULTS = {
-	baseUrl: 'https://securepay.tinkoff.ru',
-	timeoutMs: 15000
-} as const
 
 export function createTbankToken(
 	root: Record<string, unknown>,
@@ -42,7 +38,7 @@ export class TbankHttpClient {
 	private readonly terminalKey: string
 	private readonly password: string
 
-	public constructor(options: TbankModuleOptions) {
+	public constructor(private readonly options: TbankModuleOptions) {
 		const baseUrl = options.baseUrl ?? TBANK_DEFAULTS.baseUrl
 		const timeout = options.timeoutMs ?? TBANK_DEFAULTS.timeoutMs
 
@@ -73,6 +69,7 @@ export class TbankHttpClient {
 				data
 			)
 		}
+
 		return data
 	}
 

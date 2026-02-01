@@ -7,11 +7,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankCoreModule = void 0;
-// src/modules/tbank/core/tbank-core.module.ts
 const common_1 = require("@nestjs/common");
 const interfaces_1 = require("../../../common/interfaces");
 const payment_hub_context_module_1 = require("../../../common/payment-hub-context.module");
-const tbank_constants_1 = require("./config/tbank.constants");
 const tbank_http_client_1 = require("./http/tbank.http-client");
 let TbankCoreModule = class TbankCoreModule {
 };
@@ -21,7 +19,7 @@ exports.TbankCoreModule = TbankCoreModule = __decorate([
         imports: [payment_hub_context_module_1.PaymentHubContextModule],
         providers: [
             {
-                provide: tbank_constants_1.TbankOptionsSymbol,
+                provide: interfaces_1.TbankOptionsSymbol,
                 useFactory: (hub) => {
                     const cfg = hub.tbank;
                     if (!cfg) {
@@ -34,9 +32,9 @@ exports.TbankCoreModule = TbankCoreModule = __decorate([
             {
                 provide: tbank_http_client_1.TbankHttpClient,
                 useFactory: (cfg) => new tbank_http_client_1.TbankHttpClient(cfg),
-                inject: [tbank_constants_1.TbankOptionsSymbol]
+                inject: [interfaces_1.TbankOptionsSymbol]
             }
         ],
-        exports: [tbank_constants_1.TbankOptionsSymbol, tbank_http_client_1.TbankHttpClient]
+        exports: [interfaces_1.TbankOptionsSymbol, tbank_http_client_1.TbankHttpClient]
     })
 ], TbankCoreModule);

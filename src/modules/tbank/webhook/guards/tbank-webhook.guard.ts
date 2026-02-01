@@ -1,4 +1,3 @@
-// src/modules/tbank/webhook/guards/tbank-webhook.guard.ts
 import {
 	CanActivate,
 	ExecutionContext,
@@ -8,7 +7,7 @@ import {
 } from '@nestjs/common'
 import type { Request } from 'express'
 import type { TbankModuleOptions } from '../../../../common/interfaces'
-import { TbankOptionsSymbol } from '../../core/config/tbank.constants'
+import { TbankOptionsSymbol } from '../../../../common/interfaces'
 import { createTbankToken } from '../../core/http/tbank.http-client'
 
 @Injectable()
@@ -24,7 +23,6 @@ export class TbankWebhookGuard implements CanActivate {
 		const received = String(body.Token ?? '')
 		if (!received) throw new ForbiddenException('Missing webhook token')
 
-		// Сравниваем подпись
 		const expected = createTbankToken(body, this.opts.password, [
 			'Token',
 			'Password'
@@ -32,7 +30,6 @@ export class TbankWebhookGuard implements CanActivate {
 		if (received !== expected)
 			throw new ForbiddenException('Invalid webhook token')
 
-		// Доп. проверка терминала
 		if (String(body.TerminalKey ?? '') !== this.opts.terminalKey) {
 			throw new ForbiddenException('Invalid terminal key')
 		}

@@ -1,14 +1,15 @@
-// src/modules/tbank/core/tbank-core.module.ts
 import { Module } from '@nestjs/common'
 
 import type {
 	PaymentHubModuleOptions,
 	TbankModuleOptions
 } from '../../../common/interfaces'
-import { PaymentHubOptionsSymbol } from '../../../common/interfaces'
+import {
+	PaymentHubOptionsSymbol,
+	TbankOptionsSymbol
+} from '../../../common/interfaces'
 
 import { PaymentHubContextModule } from '../../../common/payment-hub-context.module'
-import { TbankOptionsSymbol } from './config/tbank.constants'
 import { TbankHttpClient } from './http/tbank.http-client'
 
 @Module({
