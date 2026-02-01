@@ -1,4 +1,5 @@
 "use strict";
+// src/index.ts
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -17,27 +18,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Core exports
 __exportStar(require("./payment-hub.module"), exports);
 __exportStar(require("./payment-hub.service"), exports);
-// Common
+// Common public API
 __exportStar(require("./common/enums"), exports);
 __exportStar(require("./common/interfaces"), exports);
 __exportStar(require("./common/types/metadata.type"), exports);
-// Invoice domain
-__exportStar(require("./modules/yookassa/invoice/enums"), exports);
-__exportStar(require("./modules/yookassa/invoice/interfaces"), exports);
-// Payment domain
-__exportStar(require("./modules/yookassa/payment/enums"), exports);
-__exportStar(require("./modules/yookassa/payment/interfaces"), exports);
-// Payment method domain
-__exportStar(require("./modules/yookassa/payment-method/enums"), exports);
-__exportStar(require("./modules/yookassa/payment-method/interfaces"), exports);
-// Receipt domain
-__exportStar(require("./modules/yookassa/receipt/enums"), exports);
-__exportStar(require("./modules/yookassa/receipt/interfaces"), exports);
-// Refund domain
-__exportStar(require("./modules/yookassa/refund/enums"), exports);
-__exportStar(require("./modules/yookassa/refund/interfaces"), exports);
-// Webhook domain
-__exportStar(require("./modules/yookassa/webhook/decorators"), exports);
-__exportStar(require("./modules/yookassa/webhook/enums"), exports);
-__exportStar(require("./modules/yookassa/webhook/guards/yookassa-webhook.guard"), exports);
-__exportStar(require("./modules/yookassa/webhook/interfaces"), exports);
+// (если хочешь, чтобы внешние могли импортнуть этот модуль напрямую)
+__exportStar(require("./common/payment-hub-context.module"), exports);
+// Providers
+__exportStar(require("./modules/yookassa"), exports);

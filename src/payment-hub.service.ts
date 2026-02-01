@@ -1,4 +1,6 @@
+// =====================================
 // src/payment-hub.service.ts
+// =====================================
 import { Injectable } from '@nestjs/common'
 import { YookassaProviderService } from './modules/yookassa/yookassa-provider.service'
 

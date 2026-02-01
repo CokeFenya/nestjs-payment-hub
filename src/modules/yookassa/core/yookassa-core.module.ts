@@ -1,4 +1,6 @@
-// src/modules/yookassa/core/yookassa-core.module.ts
+// ==============================================
+// 3) UPDATE: src/modules/yookassa/core/yookassa-core.module.ts
+// ==============================================
 import { Module } from '@nestjs/common'
 
 import type {
@@ -10,9 +12,11 @@ import {
 	YookassaOptionsSymbol
 } from '../../../common/interfaces'
 
+import { PaymentHubContextModule } from '../../../common/payment-hub-context.module'
 import { YookassaHttpClient } from './http/yookassa.http-client'
 
 @Module({
+	imports: [PaymentHubContextModule], // ✅ makes PaymentHubOptionsSymbol available here
 	providers: [
 		{
 			provide: YookassaOptionsSymbol,

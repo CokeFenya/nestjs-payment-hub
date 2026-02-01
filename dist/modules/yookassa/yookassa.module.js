@@ -7,8 +7,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YookassaModule = void 0;
-// src/modules/yookassa/yookassa.module.ts
+// =====================================
+// 4) UPDATE: src/modules/yookassa/yookassa.module.ts
+// (ensure core module is pulled in)
+// =====================================
 const common_1 = require("@nestjs/common");
+const yookassa_core_module_1 = require("./core/yookassa-core.module");
 const invoice_module_1 = require("./invoice/invoice.module");
 const payment_method_module_1 = require("./payment-method/payment-method.module");
 const payment_module_1 = require("./payment/payment.module");
@@ -20,6 +24,7 @@ exports.YookassaModule = YookassaModule;
 exports.YookassaModule = YookassaModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            yookassa_core_module_1.YookassaCoreModule,
             payment_module_1.YookassaPaymentModule,
             refund_module_1.YookassaRefundModule,
             invoice_module_1.YookassaInvoiceModule,

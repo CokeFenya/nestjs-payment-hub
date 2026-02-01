@@ -1,4 +1,6 @@
-// src/payment-hub.module.ts
+// =====================================
+// 2) UPDATE: src/payment-hub.module.ts
+// =====================================
 import { Global, Module, type DynamicModule } from '@nestjs/common'
 
 import type {
@@ -7,6 +9,7 @@ import type {
 } from './common/interfaces'
 import { PaymentHubOptionsSymbol } from './common/interfaces'
 
+import { PaymentHubContextModule } from './common/payment-hub-context.module'
 import { YookassaModule } from './modules/yookassa/yookassa.module'
 import { PaymentHubService } from './payment-hub.service'
 
@@ -17,14 +20,17 @@ export class PaymentHubModule {
 		return {
 			module: PaymentHubModule,
 			imports: [
-				// 1 провайдер = 1 module (провайдер сам тянет core+домены)
+				PaymentHubContextModule, // ✅ important
 				YookassaModule
 			],
 			providers: [
 				{ provide: PaymentHubOptionsSymbol, useValue: options },
 				PaymentHubService
 			],
-			exports: [PaymentHubService],
+			exports: [
+				PaymentHubService,
+				PaymentHubOptionsSymbol // ✅ export token too
+			],
 			global: true
 		}
 	}
@@ -34,7 +40,11 @@ export class PaymentHubModule {
 	): DynamicModule {
 		return {
 			module: PaymentHubModule,
-			imports: [...(options.imports || []), YookassaModule],
+			imports: [
+				PaymentHubContextModule, // ✅ important
+				...(options.imports || []),
+				YookassaModule
+			],
 			providers: [
 				{
 					provide: PaymentHubOptionsSymbol,
@@ -43,7 +53,7 @@ export class PaymentHubModule {
 				},
 				PaymentHubService
 			],
-			exports: [PaymentHubService],
+			exports: [PaymentHubService, PaymentHubOptionsSymbol],
 			global: true
 		}
 	}

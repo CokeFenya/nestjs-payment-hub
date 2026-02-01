@@ -7,15 +7,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YookassaCoreModule = void 0;
-// src/modules/yookassa/core/yookassa-core.module.ts
+// ==============================================
+// 3) UPDATE: src/modules/yookassa/core/yookassa-core.module.ts
+// ==============================================
 const common_1 = require("@nestjs/common");
 const interfaces_1 = require("../../../common/interfaces");
+const payment_hub_context_module_1 = require("../../../common/payment-hub-context.module");
 const yookassa_http_client_1 = require("./http/yookassa.http-client");
 let YookassaCoreModule = class YookassaCoreModule {
 };
 exports.YookassaCoreModule = YookassaCoreModule;
 exports.YookassaCoreModule = YookassaCoreModule = __decorate([
     (0, common_1.Module)({
+        imports: [payment_hub_context_module_1.PaymentHubContextModule], // ✅ makes PaymentHubOptionsSymbol available here
         providers: [
             {
                 provide: interfaces_1.YookassaOptionsSymbol,

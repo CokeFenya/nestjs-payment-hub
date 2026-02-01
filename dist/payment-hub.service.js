@@ -10,7 +10,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentHubService = void 0;
+// =====================================
 // src/payment-hub.service.ts
+// =====================================
 const common_1 = require("@nestjs/common");
 const yookassa_provider_service_1 = require("./modules/yookassa/yookassa-provider.service");
 let PaymentHubService = class PaymentHubService {
