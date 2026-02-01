@@ -22,9 +22,8 @@ exports.TbankCoreModule = TbankCoreModule = __decorate([
                 provide: interfaces_1.TbankOptionsSymbol,
                 useFactory: (hub) => {
                     const cfg = hub.tbank;
-                    if (!cfg) {
+                    if (!cfg)
                         throw new Error('[PaymentHub] T-Bank config is missing. Provide options.tbank');
-                    }
                     return cfg;
                 },
                 inject: [interfaces_1.PaymentHubOptionsSymbol]

@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common'
-
 import type {
 	PaymentHubModuleOptions,
 	TbankModuleOptions
@@ -8,7 +7,6 @@ import {
 	PaymentHubOptionsSymbol,
 	TbankOptionsSymbol
 } from '../../../common/interfaces'
-
 import { PaymentHubContextModule } from '../../../common/payment-hub-context.module'
 import { TbankHttpClient } from './http/tbank.http-client'
 
@@ -19,11 +17,10 @@ import { TbankHttpClient } from './http/tbank.http-client'
 			provide: TbankOptionsSymbol,
 			useFactory: (hub: PaymentHubModuleOptions): TbankModuleOptions => {
 				const cfg = hub.tbank
-				if (!cfg) {
+				if (!cfg)
 					throw new Error(
 						'[PaymentHub] T-Bank config is missing. Provide options.tbank'
 					)
-				}
 				return cfg
 			},
 			inject: [PaymentHubOptionsSymbol]

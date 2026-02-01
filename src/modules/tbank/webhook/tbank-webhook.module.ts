@@ -5,6 +5,6 @@ import { TbankWebhookGuard } from './guards/tbank-webhook.guard'
 @Module({
 	imports: [TbankCoreModule],
 	providers: [TbankWebhookGuard],
-	exports: [TbankWebhookGuard]
+	exports: [TbankCoreModule, TbankWebhookGuard]
 })
 export class TbankWebhookModule {}
