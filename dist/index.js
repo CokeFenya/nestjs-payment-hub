@@ -21,4 +21,5 @@ __exportStar(require("./common/interfaces"), exports);
 __exportStar(require("./common/types/metadata.type"), exports);
 __exportStar(require("./modules/crypto"), exports);
 __exportStar(require("./modules/tbank"), exports);
+__exportStar(require("./modules/tbank/webhook"), exports); // важно
 __exportStar(require("./modules/yookassa"), exports);

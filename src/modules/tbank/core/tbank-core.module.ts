@@ -17,10 +17,11 @@ import { TbankHttpClient } from './http/tbank.http-client'
 			provide: TbankOptionsSymbol,
 			useFactory: (hub: PaymentHubModuleOptions): TbankModuleOptions => {
 				const cfg = hub.tbank
-				if (!cfg)
+				if (!cfg) {
 					throw new Error(
 						'[PaymentHub] T-Bank config is missing. Provide options.tbank'
 					)
+				}
 				return cfg
 			},
 			inject: [PaymentHubOptionsSymbol]
