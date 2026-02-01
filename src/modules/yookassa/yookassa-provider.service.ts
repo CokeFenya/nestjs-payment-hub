@@ -1,3 +1,4 @@
+// src/modules/yookassa/yookassa-provider.service.ts
 import { Injectable } from '@nestjs/common'
 
 import { YookassaInvoiceService } from './invoice/invoice.service'

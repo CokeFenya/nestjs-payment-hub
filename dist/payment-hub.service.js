@@ -10,24 +10,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentHubService = void 0;
+// src/payment-hub.service.ts
 const common_1 = require("@nestjs/common");
-const invoice_service_1 = require("./modules/yookassa/invoice/invoice.service");
-const payment_method_service_1 = require("./modules/yookassa/payment-method/payment-method.service");
-const payment_service_1 = require("./modules/yookassa/payment/payment.service");
-const refund_service_1 = require("./modules/yookassa/refund/refund.service");
+const yookassa_provider_service_1 = require("./modules/yookassa/yookassa-provider.service");
 let PaymentHubService = class PaymentHubService {
-    constructor(payments, paymentMethods, invoices, refunds) {
-        this.payments = payments;
-        this.paymentMethods = paymentMethods;
-        this.invoices = invoices;
-        this.refunds = refunds;
+    constructor(yookassa) {
+        this.yookassa = yookassa;
     }
 };
 exports.PaymentHubService = PaymentHubService;
 exports.PaymentHubService = PaymentHubService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [payment_service_1.YookassaPaymentService,
-        payment_method_service_1.YookassaPaymentMethodService,
-        invoice_service_1.YookassaInvoiceService,
-        refund_service_1.YookassaRefundService])
+    __metadata("design:paramtypes", [yookassa_provider_service_1.YookassaProviderService])
 ], PaymentHubService);
