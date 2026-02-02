@@ -11,3 +11,5 @@ export * from './payment/interfaces'
 
 export * from './sbp/enums'
 export * from './sbp/interfaces'
+
+export * from './webhook'

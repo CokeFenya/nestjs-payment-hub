@@ -24,3 +24,4 @@ __exportStar(require("./payment/enums"), exports);
 __exportStar(require("./payment/interfaces"), exports);
 __exportStar(require("./sbp/enums"), exports);
 __exportStar(require("./sbp/interfaces"), exports);
+__exportStar(require("./webhook"), exports);
