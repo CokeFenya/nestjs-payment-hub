@@ -1,1 +1,1 @@
-export * from './sbp-data-type.enum';
+export * from './sbp-qr-data-type.enum';

@@ -3,12 +3,11 @@ export type TbankModuleOptions = {
     terminalKey: string;
     password: string;
     /**
-     * Если нужно принудительно гонять через тестовый контур.
-     * Если false/undefined — используем production baseUrl.
+     * Bearer API Token (T-API) — нужен для:
+     * - T-Pay status/link/qr
+     * - SberPay link/qr
+     * - cashbox/SendClosingReceipt
      */
-    isTest?: boolean;
-    /**
-     * Если у тебя уже есть корпоративный прокси как в YooKassa — оставим.
-     */
+    bearerToken: string;
     proxyUrl?: string;
 };

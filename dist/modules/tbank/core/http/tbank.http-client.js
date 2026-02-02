@@ -13,6 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankHttpClient = void 0;
+// core/http/tbank.http-client.ts
 const common_1 = require("@nestjs/common");
 const undici_1 = require("undici");
 const interfaces_1 = require("../../../../common/interfaces");
@@ -25,52 +26,89 @@ function isTbankApiErrorShape(x) {
 let TbankHttpClient = class TbankHttpClient {
     constructor(cfg) {
         this.cfg = cfg;
-        this.baseUrl = (cfg.isTest ? tbank_constants_1.TBANK_API_BASE_URL_TEST : tbank_constants_1.TBANK_API_BASE_URL_PROD).replace(/\/+$/, '');
-        // ✅ NO PROXY для tbank по умолчанию (обходит setGlobalDispatcher)
+        this.baseUrl = tbank_constants_1.TBANK_API_BASE_URL.replace(/\/+$/, '');
         this.dispatcher = cfg.proxyUrl
             ? new undici_1.ProxyAgent(cfg.proxyUrl)
             : new undici_1.Agent();
     }
-    async post(path, data) {
-        var _a, _b, _c, _d;
+    /** Классические методы эквайринга: /v2/Init, /v2/GetState и т.п. (Token = sha256) */
+    async postSigned(path, data) {
+        var _a;
         const url = `${this.baseUrl}/${tbank_constants_1.TBANK_API_VERSION}/${path.replace(/^\/+/, '')}`;
         const body = Object.assign(Object.assign({}, data), { TerminalKey: (_a = data.TerminalKey) !== null && _a !== void 0 ? _a : this.cfg.terminalKey });
         body.Token = (0, tbank_token_util_1.buildTbankToken)(body, this.cfg.password);
+        return this.doJsonRequest(url, 'POST', body, {
+            'Content-Type': 'application/json'
+        });
+    }
+    /** Bearer GET для T-Pay/SberPay */
+    async getBearerText(path, headers) {
+        const url = `${this.baseUrl}/${path.replace(/^\/+/, '')}`;
+        const res = await (0, undici_1.request)(url, {
+            method: 'GET',
+            dispatcher: this.dispatcher,
+            headersTimeout: 15000,
+            bodyTimeout: 15000,
+            headers: Object.assign({ Authorization: `Bearer ${this.cfg.bearerToken}` }, (headers !== null && headers !== void 0 ? headers : {}))
+        });
+        const text = await res.body.text();
+        if (res.statusCode >= 400) {
+            throw new tbank_error_1.TbankError('tbank_http_error', `HTTP ${res.statusCode}`, {
+                url,
+                responseHead: text.slice(0, 4000)
+            });
+        }
+        return text;
+    }
+    /** Bearer GET, ожидаем JSON (link/status и т.п.) */
+    async getBearer(path, headers) {
+        const url = `${this.baseUrl}/${path.replace(/^\/+/, '')}`;
+        return this.doJsonRequest(url, 'GET', undefined, Object.assign({ Authorization: `Bearer ${this.cfg.bearerToken}` }, (headers !== null && headers !== void 0 ? headers : {})));
+    }
+    /** Bearer POST для cashbox/SendClosingReceipt */
+    async postBearer(path, data) {
+        const url = `${this.baseUrl}/${path.replace(/^\/+/, '')}`;
+        return this.doJsonRequest(url, 'POST', data, {
+            Authorization: `Bearer ${this.cfg.bearerToken}`,
+            'Content-Type': 'application/json'
+        });
+    }
+    async doJsonRequest(url, method, body, headers) {
+        var _a, _b, _c;
         try {
             const res = await (0, undici_1.request)(url, {
-                method: 'POST',
+                method,
                 dispatcher: this.dispatcher,
                 headersTimeout: 15000,
                 bodyTimeout: 15000,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
+                headers,
+                body: body === undefined ? undefined : JSON.stringify(body)
             });
-            // ✅ читаем тело РОВНО 1 раз
             const text = await res.body.text();
             let json;
             try {
                 json = text ? JSON.parse(text) : {};
             }
-            catch (_e) {
+            catch (_d) {
                 throw new tbank_error_1.TbankError('tbank_non_json_response', `Non-JSON response (HTTP ${res.statusCode})`, {
                     url,
                     statusCode: res.statusCode,
-                    responseHead: text.slice(0, 4000),
-                    bodySent: body
+                    responseHead: text.slice(0, 4000)
                 });
             }
             if (res.statusCode >= 400) {
                 throw new tbank_error_1.TbankError('tbank_http_error', `HTTP ${res.statusCode}`, json);
             }
+            // В классическом API часто есть Success=false — проверяем универсально
             if (isTbankApiErrorShape(json) && json.Success === false) {
-                throw new tbank_error_1.TbankError('tbank_api_error', (_b = json.Message) !== null && _b !== void 0 ? _b : 'T-Bank API error', json);
+                throw new tbank_error_1.TbankError('tbank_api_error', (_a = json.Message) !== null && _a !== void 0 ? _a : 'T-Bank API error', json);
             }
             return json;
         }
         catch (e) {
             if (e instanceof tbank_error_1.TbankError)
                 throw e;
-            throw new tbank_error_1.TbankError((_c = e === null || e === void 0 ? void 0 : e.type) !== null && _c !== void 0 ? _c : 'tbank_error', (_d = e === null || e === void 0 ? void 0 : e.message) !== null && _d !== void 0 ? _d : 'Unknown T-Bank error', e);
+            throw new tbank_error_1.TbankError((_b = e === null || e === void 0 ? void 0 : e.type) !== null && _b !== void 0 ? _b : 'tbank_error', (_c = e === null || e === void 0 ? void 0 : e.message) !== null && _c !== void 0 ? _c : 'Unknown T-Bank error', e);
         }
     }
 };

@@ -8,9 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankModule = void 0;
 const common_1 = require("@nestjs/common");
+const card_module_1 = require("./card/card.module");
 const tbank_core_module_1 = require("./core/tbank-core.module");
-const mirpay_module_1 = require("./mirpay/mirpay.module");
-const payment_module_1 = require("./payment/payment.module");
+const fiscalization_module_1 = require("./fiscalization/fiscalization.module");
+const sberpay_module_1 = require("./sberpay/sberpay.module");
 const sbp_module_1 = require("./sbp/sbp.module");
 const tpay_module_1 = require("./tpay/tpay.module");
 const tbank_provider_service_1 = require("./tbank-provider.service");
@@ -22,10 +23,11 @@ exports.TbankModule = TbankModule = __decorate([
     (0, common_1.Module)({
         imports: [
             tbank_core_module_1.TbankCoreModule,
-            payment_module_1.TbankPaymentModule,
+            card_module_1.TbankCardModule,
             sbp_module_1.TbankSbpModule,
             tpay_module_1.TbankTpayModule,
-            mirpay_module_1.TbankMirPayModule
+            sberpay_module_1.TbankSberPayModule,
+            fiscalization_module_1.TbankFiscalizationModule
         ],
         providers: [tbank_provider_service_1.TbankProviderService, tbank_webhook_guard_1.TbankWebhookGuard],
         exports: [tbank_provider_service_1.TbankProviderService, tbank_core_module_1.TbankCoreModule, tbank_webhook_guard_1.TbankWebhookGuard]

@@ -1,36 +1,40 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { request } from 'undici'
 import {
 	TbankModuleOptions,
 	TbankOptionsSymbol
 } from '../../../common/interfaces'
-import {
-	TBANK_API_BASE_URL_PROD,
-	TBANK_API_BASE_URL_TEST
-} from '../core/config/tbank.constants'
+import { TbankHttpClient } from '../core/http/tbank.http-client'
+import { TpayVersionEnum } from './enums'
+import type { TpayLinkResponse, TpayStatusResponse } from './interfaces'
 
 @Injectable()
 export class TbankTpayService {
 	public constructor(
+		private readonly http: TbankHttpClient,
 		@Inject(TbankOptionsSymbol) private readonly cfg: TbankModuleOptions
 	) {}
 
-	private baseUrl() {
-		return (
-			this.cfg.isTest ? TBANK_API_BASE_URL_TEST : TBANK_API_BASE_URL_PROD
-		).replace(/\/+$/, '')
+	// GET /v2/TinkoffPay/terminals/{TerminalKey}/status (Bearer) :contentReference[oaicite:5]{index=5}
+	public status(): Promise<TpayStatusResponse> {
+		return this.http.getBearer(
+			`v2/TinkoffPay/terminals/${encodeURIComponent(this.cfg.terminalKey)}/status`
+		)
 	}
 
-	public async getLink(paymentId: number, version: string = '2.0') {
-		const url = `${this.baseUrl()}/v2/TinkoffPay/transactions/${paymentId}/versions/${version}/link`
-		const res = await request(url, { method: 'GET' })
-		return res.body.json()
+	// GET /v2/TinkoffPay/transactions/{paymentId}/versions/{version}/link (Bearer) :contentReference[oaicite:6]{index=6}
+	public link(
+		paymentId: number,
+		version: TpayVersionEnum = TpayVersionEnum.V2_0
+	): Promise<TpayLinkResponse> {
+		return this.http.getBearer(
+			`v2/TinkoffPay/transactions/${encodeURIComponent(String(paymentId))}/versions/${encodeURIComponent(version)}/link`
+		)
 	}
 
-	public async getQrSvg(paymentId: number) {
-		const url = `${this.baseUrl()}/v2/TinkoffPay/${paymentId}/QR`
-		const res = await request(url, { method: 'GET' })
-		// дока: 200 = SVG :contentReference[oaicite:24]{index=24}
-		return res.body.text()
+	// GET /v2/TinkoffPay/{paymentId}/QR (Bearer, image/svg) :contentReference[oaicite:7]{index=7}
+	public qr(paymentId: number): Promise<string> {
+		return this.http.getBearer(
+			`v2/TinkoffPay/${encodeURIComponent(String(paymentId))}/QR`
+		)
 	}
 }

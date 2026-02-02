@@ -11,23 +11,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankProviderService = void 0;
 const common_1 = require("@nestjs/common");
-const mirpay_service_1 = require("./mirpay/mirpay.service");
-const payment_service_1 = require("./payment/payment.service");
-const sbp_service_1 = require("./sbp/sbp.service");
-const tpay_service_1 = require("./tpay/tpay.service");
+const card_service_1 = require("./card/card.service");
+const fiscalization_service_1 = require("./fiscalization/fiscalization.service");
+const sberpay_service_1 = require("./sberpay/sberpay.service");
+const sbp_1 = require("./sbp");
+const tpay_1 = require("./tpay");
 let TbankProviderService = class TbankProviderService {
-    constructor(payments, sbp, tpay, mirpay) {
-        this.payments = payments;
+    constructor(card, sbp, tpay, sberpay, fiscalization) {
+        this.card = card;
         this.sbp = sbp;
         this.tpay = tpay;
-        this.mirpay = mirpay;
+        this.sberpay = sberpay;
+        this.fiscalization = fiscalization;
     }
 };
 exports.TbankProviderService = TbankProviderService;
 exports.TbankProviderService = TbankProviderService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [payment_service_1.TbankPaymentService,
-        sbp_service_1.TbankSbpService,
-        tpay_service_1.TbankTpayService,
-        mirpay_service_1.TbankMirPayService])
+    __metadata("design:paramtypes", [card_service_1.TbankCardService,
+        sbp_1.TbankSbpService,
+        tpay_1.TbankTpayService,
+        sberpay_service_1.TbankSberPayService,
+        fiscalization_service_1.TbankFiscalizationService])
 ], TbankProviderService);

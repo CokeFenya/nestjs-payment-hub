@@ -1,3 +1,4 @@
+// core/http/tbank.http-client.ts
 import { Inject, Injectable } from '@nestjs/common'
 import { Agent, ProxyAgent, request } from 'undici'
 import {
@@ -5,8 +6,7 @@ import {
 	TbankOptionsSymbol
 } from '../../../../common/interfaces'
 import {
-	TBANK_API_BASE_URL_PROD,
-	TBANK_API_BASE_URL_TEST,
+	TBANK_API_BASE_URL,
 	TBANK_API_VERSION
 } from '../config/tbank.constants'
 import { buildTbankToken } from '../utils/tbank-token.util'
@@ -19,7 +19,6 @@ type TbankApiErrorShape = {
 	ErrorCode?: string
 	[k: string]: any
 }
-
 function isTbankApiErrorShape(x: unknown): x is TbankApiErrorShape {
 	return !!x && typeof x === 'object' && 'Success' in (x as any)
 }
@@ -32,17 +31,14 @@ export class TbankHttpClient {
 	public constructor(
 		@Inject(TbankOptionsSymbol) private readonly cfg: TbankModuleOptions
 	) {
-		this.baseUrl = (
-			cfg.isTest ? TBANK_API_BASE_URL_TEST : TBANK_API_BASE_URL_PROD
-		).replace(/\/+$/, '')
-
-		// ✅ NO PROXY для tbank по умолчанию (обходит setGlobalDispatcher)
+		this.baseUrl = TBANK_API_BASE_URL.replace(/\/+$/, '')
 		this.dispatcher = cfg.proxyUrl
 			? new ProxyAgent(cfg.proxyUrl)
 			: new Agent()
 	}
 
-	public async post<T = any>(
+	/** Классические методы эквайринга: /v2/Init, /v2/GetState и т.п. (Token = sha256) */
+	public async postSigned<T = any>(
 		path: string,
 		data: Record<string, any>
 	): Promise<T> {
@@ -52,20 +48,84 @@ export class TbankHttpClient {
 			...data,
 			TerminalKey: data.TerminalKey ?? this.cfg.terminalKey
 		}
-
 		body.Token = buildTbankToken(body, this.cfg.password)
 
+		return this.doJsonRequest<T>(url, 'POST', body, {
+			'Content-Type': 'application/json'
+		})
+	}
+
+	/** Bearer GET для T-Pay/SberPay */
+	public async getBearerText(
+		path: string,
+		headers?: Record<string, string>
+	): Promise<string> {
+		const url = `${this.baseUrl}/${path.replace(/^\/+/, '')}`
+
+		const res = await request(url, {
+			method: 'GET',
+			dispatcher: this.dispatcher,
+			headersTimeout: 15000,
+			bodyTimeout: 15000,
+			headers: {
+				Authorization: `Bearer ${this.cfg.bearerToken}`,
+				...(headers ?? {})
+			}
+		})
+
+		const text = await res.body.text()
+
+		if (res.statusCode >= 400) {
+			throw new TbankError('tbank_http_error', `HTTP ${res.statusCode}`, {
+				url,
+				responseHead: text.slice(0, 4000)
+			})
+		}
+
+		return text
+	}
+
+	/** Bearer GET, ожидаем JSON (link/status и т.п.) */
+	public async getBearer<T = any>(
+		path: string,
+		headers?: Record<string, string>
+	): Promise<T> {
+		const url = `${this.baseUrl}/${path.replace(/^\/+/, '')}`
+
+		return this.doJsonRequest<T>(url, 'GET', undefined, {
+			Authorization: `Bearer ${this.cfg.bearerToken}`,
+			...(headers ?? {})
+		})
+	}
+
+	/** Bearer POST для cashbox/SendClosingReceipt */
+	public async postBearer<T = any>(
+		path: string,
+		data: Record<string, any>
+	): Promise<T> {
+		const url = `${this.baseUrl}/${path.replace(/^\/+/, '')}`
+		return this.doJsonRequest<T>(url, 'POST', data, {
+			Authorization: `Bearer ${this.cfg.bearerToken}`,
+			'Content-Type': 'application/json'
+		})
+	}
+
+	private async doJsonRequest<T>(
+		url: string,
+		method: 'GET' | 'POST',
+		body?: any,
+		headers?: Record<string, string>
+	): Promise<T> {
 		try {
 			const res = await request(url, {
-				method: 'POST',
+				method,
 				dispatcher: this.dispatcher,
 				headersTimeout: 15000,
 				bodyTimeout: 15000,
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(body)
+				headers,
+				body: body === undefined ? undefined : JSON.stringify(body)
 			})
 
-			// ✅ читаем тело РОВНО 1 раз
 			const text = await res.body.text()
 
 			let json: unknown
@@ -78,8 +138,7 @@ export class TbankHttpClient {
 					{
 						url,
 						statusCode: res.statusCode,
-						responseHead: text.slice(0, 4000),
-						bodySent: body
+						responseHead: text.slice(0, 4000)
 					}
 				)
 			}
@@ -92,10 +151,11 @@ export class TbankHttpClient {
 				)
 			}
 
+			// В классическом API часто есть Success=false — проверяем универсально
 			if (isTbankApiErrorShape(json) && json.Success === false) {
 				throw new TbankError(
 					'tbank_api_error',
-					json.Message ?? 'T-Bank API error',
+					(json as any).Message ?? 'T-Bank API error',
 					json
 				)
 			}

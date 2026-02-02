@@ -1,21 +1,15 @@
-import type { TbankPaymentStatusEnum } from '../../payment/enums';
-/**
- * Уведомление о платеже (NotificationPayment).
- * Набор полей может отличаться по статусам/сценариям, поэтому многое optional.
- */
 export interface TbankPaymentNotification {
     TerminalKey: string;
     OrderId?: string;
     Success: boolean;
-    Status?: TbankPaymentStatusEnum | string;
-    PaymentId: string;
+    Status?: string;
+    PaymentId: number | string;
     ErrorCode: string;
     Amount?: number;
-    CardId?: string;
+    CardId?: number | string;
     Pan?: string;
     ExpDate?: string;
-    RebillId?: string;
-    Data?: Record<string, any>;
-    Receipt?: any;
     Token: string;
+    Receipt?: any;
+    Data?: Record<string, any>;
 }

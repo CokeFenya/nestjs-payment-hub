@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common'
 
+import { TbankCardModule } from './card/card.module'
 import { TbankCoreModule } from './core/tbank-core.module'
-import { TbankMirPayModule } from './mirpay/mirpay.module'
-import { TbankPaymentModule } from './payment/payment.module'
+import { TbankFiscalizationModule } from './fiscalization/fiscalization.module'
+import { TbankSberPayModule } from './sberpay/sberpay.module'
 import { TbankSbpModule } from './sbp/sbp.module'
 import { TbankTpayModule } from './tpay/tpay.module'
 
@@ -12,10 +13,11 @@ import { TbankWebhookGuard } from './webhook/guards/tbank-webhook.guard'
 @Module({
 	imports: [
 		TbankCoreModule,
-		TbankPaymentModule,
+		TbankCardModule,
 		TbankSbpModule,
 		TbankTpayModule,
-		TbankMirPayModule
+		TbankSberPayModule,
+		TbankFiscalizationModule
 	],
 	providers: [TbankProviderService, TbankWebhookGuard],
 	exports: [TbankProviderService, TbankCoreModule, TbankWebhookGuard]

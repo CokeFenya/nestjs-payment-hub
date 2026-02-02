@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common'
-import { TbankMirPayService } from './mirpay/mirpay.service'
-import { TbankPaymentService } from './payment/payment.service'
-import { TbankSbpService } from './sbp/sbp.service'
-import { TbankTpayService } from './tpay/tpay.service'
+import { TbankCardService } from './card/card.service'
+import { TbankFiscalizationService } from './fiscalization/fiscalization.service'
+import { TbankSberPayService } from './sberpay/sberpay.service'
+import { TbankSbpService } from './sbp'
+import { TbankTpayService } from './tpay'
 
 @Injectable()
 export class TbankProviderService {
 	public constructor(
-		public readonly payments: TbankPaymentService,
+		public readonly card: TbankCardService,
 		public readonly sbp: TbankSbpService,
 		public readonly tpay: TbankTpayService,
-		public readonly mirpay: TbankMirPayService
+		public readonly sberpay: TbankSberPayService,
+		public readonly fiscalization: TbankFiscalizationService
 	) {}
 }

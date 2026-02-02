@@ -1,7 +1,7 @@
-import { SbpDataTypeEnum } from '../../enums/sbp-data-type.enum'
+import { SbpQrDataTypeEnum } from '../../enums'
 
-export interface GetQrRequest {
+export interface SbpGetQrRequest {
 	PaymentId: number
-	DataType?: SbpDataTypeEnum // default PAYLOAD :contentReference[oaicite:19]{index=19}
-	BankId?: string
+	DataType?: SbpQrDataTypeEnum // default PAYLOAD
+	BankId?: string // uuid; только для PAYLOAD
 }

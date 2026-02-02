@@ -1,11 +1,13 @@
-import { TbankMirPayService } from './mirpay/mirpay.service';
-import { TbankPaymentService } from './payment/payment.service';
-import { TbankSbpService } from './sbp/sbp.service';
-import { TbankTpayService } from './tpay/tpay.service';
+import { TbankCardService } from './card/card.service';
+import { TbankFiscalizationService } from './fiscalization/fiscalization.service';
+import { TbankSberPayService } from './sberpay/sberpay.service';
+import { TbankSbpService } from './sbp';
+import { TbankTpayService } from './tpay';
 export declare class TbankProviderService {
-    readonly payments: TbankPaymentService;
+    readonly card: TbankCardService;
     readonly sbp: TbankSbpService;
     readonly tpay: TbankTpayService;
-    readonly mirpay: TbankMirPayService;
-    constructor(payments: TbankPaymentService, sbp: TbankSbpService, tpay: TbankTpayService, mirpay: TbankMirPayService);
+    readonly sberpay: TbankSberPayService;
+    readonly fiscalization: TbankFiscalizationService;
+    constructor(card: TbankCardService, sbp: TbankSbpService, tpay: TbankTpayService, sberpay: TbankSberPayService, fiscalization: TbankFiscalizationService);
 }

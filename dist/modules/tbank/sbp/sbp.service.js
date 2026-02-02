@@ -16,11 +16,9 @@ let TbankSbpService = class TbankSbpService {
     constructor(http) {
         this.http = http;
     }
+    // POST /v2/GetQr (Token sha256 in body) :contentReference[oaicite:3]{index=3}
     getQr(data) {
-        return this.http.post('GetQr', data); // /v2/GetQr :contentReference[oaicite:20]{index=20}
-    }
-    getQrState(data) {
-        return this.http.post('GetQrState', data); // /v2/GetQrState :contentReference[oaicite:21]{index=21}
+        return this.http.postSigned('GetQr', data);
     }
 };
 exports.TbankSbpService = TbankSbpService;

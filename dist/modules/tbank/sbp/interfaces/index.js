@@ -14,7 +14,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./requests/get-qr-state.request"), exports);
 __exportStar(require("./requests/get-qr.request"), exports);
-__exportStar(require("./responses/get-qr-state.response"), exports);
 __exportStar(require("./responses/get-qr.response"), exports);

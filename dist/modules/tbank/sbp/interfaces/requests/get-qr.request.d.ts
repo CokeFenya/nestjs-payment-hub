@@ -1,6 +1,6 @@
-import { SbpDataTypeEnum } from '../../enums/sbp-data-type.enum';
-export interface GetQrRequest {
+import { SbpQrDataTypeEnum } from '../../enums';
+export interface SbpGetQrRequest {
     PaymentId: number;
-    DataType?: SbpDataTypeEnum;
+    DataType?: SbpQrDataTypeEnum;
     BankId?: string;
 }

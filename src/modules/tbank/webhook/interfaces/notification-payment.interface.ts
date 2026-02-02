@@ -1,32 +1,16 @@
-import type { TbankPaymentStatusEnum } from '../../payment/enums'
-
-/**
- * Уведомление о платеже (NotificationPayment).
- * Набор полей может отличаться по статусам/сценариям, поэтому многое optional.
- */
+// webhook/interfaces/notification-payment.interface.ts
 export interface TbankPaymentNotification {
 	TerminalKey: string
 	OrderId?: string
-
 	Success: boolean
-	Status?: TbankPaymentStatusEnum | string
-
-	PaymentId: string
+	Status?: string
+	PaymentId: number | string
 	ErrorCode: string
-
 	Amount?: number
-
-	// Карточные поля (обычно в AUTHORIZED/CONFIRMED):
-	CardId?: string
+	CardId?: number | string
 	Pan?: string
 	ExpDate?: string
-	RebillId?: string
-
-	// Доп.параметры (если включены):
-	Data?: Record<string, any>
-
-	// Чек/фискализация может приходить как вложенный объект:
-	Receipt?: any
-
 	Token: string
+	Receipt?: any
+	Data?: Record<string, any>
 }

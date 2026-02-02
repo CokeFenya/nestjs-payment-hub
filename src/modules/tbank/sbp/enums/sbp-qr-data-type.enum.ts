@@ -1,4 +1,4 @@
-export enum SbpDataTypeEnum {
+export enum SbpQrDataTypeEnum {
 	PAYLOAD = 'PAYLOAD',
 	IMAGE = 'IMAGE'
 }

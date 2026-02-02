@@ -1,0 +1,9 @@
+export declare enum TbankPaymentStatusEnum {
+    NEW = "NEW",
+    FORMSHOWED = "FORMSHOWED",
+    AUTHORIZED = "AUTHORIZED",
+    CONFIRMED = "CONFIRMED",
+    CANCELED = "CANCELED",
+    REJECTED = "REJECTED",
+    DEADLINE_EXPIRED = "DEADLINE_EXPIRED"
+}

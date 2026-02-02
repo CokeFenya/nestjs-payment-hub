@@ -14,31 +14,30 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankTpayService = void 0;
 const common_1 = require("@nestjs/common");
-const undici_1 = require("undici");
 const interfaces_1 = require("../../../common/interfaces");
-const tbank_constants_1 = require("../core/config/tbank.constants");
+const tbank_http_client_1 = require("../core/http/tbank.http-client");
+const enums_1 = require("./enums");
 let TbankTpayService = class TbankTpayService {
-    constructor(cfg) {
+    constructor(http, cfg) {
+        this.http = http;
         this.cfg = cfg;
     }
-    baseUrl() {
-        return (this.cfg.isTest ? tbank_constants_1.TBANK_API_BASE_URL_TEST : tbank_constants_1.TBANK_API_BASE_URL_PROD).replace(/\/+$/, '');
+    // GET /v2/TinkoffPay/terminals/{TerminalKey}/status (Bearer) :contentReference[oaicite:5]{index=5}
+    status() {
+        return this.http.getBearer(`v2/TinkoffPay/terminals/${encodeURIComponent(this.cfg.terminalKey)}/status`);
     }
-    async getLink(paymentId, version = '2.0') {
-        const url = `${this.baseUrl()}/v2/TinkoffPay/transactions/${paymentId}/versions/${version}/link`;
-        const res = await (0, undici_1.request)(url, { method: 'GET' });
-        return res.body.json();
+    // GET /v2/TinkoffPay/transactions/{paymentId}/versions/{version}/link (Bearer) :contentReference[oaicite:6]{index=6}
+    link(paymentId, version = enums_1.TpayVersionEnum.V2_0) {
+        return this.http.getBearer(`v2/TinkoffPay/transactions/${encodeURIComponent(String(paymentId))}/versions/${encodeURIComponent(version)}/link`);
     }
-    async getQrSvg(paymentId) {
-        const url = `${this.baseUrl()}/v2/TinkoffPay/${paymentId}/QR`;
-        const res = await (0, undici_1.request)(url, { method: 'GET' });
-        // дока: 200 = SVG :contentReference[oaicite:24]{index=24}
-        return res.body.text();
+    // GET /v2/TinkoffPay/{paymentId}/QR (Bearer, image/svg) :contentReference[oaicite:7]{index=7}
+    qr(paymentId) {
+        return this.http.getBearer(`v2/TinkoffPay/${encodeURIComponent(String(paymentId))}/QR`);
     }
 };
 exports.TbankTpayService = TbankTpayService;
 exports.TbankTpayService = TbankTpayService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, common_1.Inject)(interfaces_1.TbankOptionsSymbol)),
-    __metadata("design:paramtypes", [Object])
+    __param(1, (0, common_1.Inject)(interfaces_1.TbankOptionsSymbol)),
+    __metadata("design:paramtypes", [tbank_http_client_1.TbankHttpClient, Object])
 ], TbankTpayService);
