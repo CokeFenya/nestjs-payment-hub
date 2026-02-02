@@ -13,14 +13,6 @@ import {
 import { buildTbankToken } from '../utils/tbank-token.util'
 import { TbankError } from './errors/tbank.error'
 
-type TbankApiErrorShape = {
-	Success: boolean
-	Message?: string
-	[k: string]: any
-}
-const isTbankApiErrorShape = (x: unknown): x is TbankApiErrorShape =>
-	!!x && typeof x === 'object' && 'Success' in (x as any)
-
 @Injectable()
 export class TbankHttpClient {
 	private readonly dispatcher: Agent | ProxyAgent
@@ -33,8 +25,8 @@ export class TbankHttpClient {
 			cfg.isTest ? TBANK_API_BASE_URL_TEST : TBANK_API_BASE_URL_PROD
 		).replace(/\/+$/, '')
 
-		// ✅ ВАЖНО: если proxyUrl не задан — всё равно ставим DIRECT Agent,
-		// чтобы обойти global ProxyAgent (setGlobalDispatcher)
+		// ✅ ВАЖНО: если proxyUrl не задан — всё равно ставим Agent(),
+		// чтобы перебить setGlobalDispatcher(ProxyAgent)
 		this.dispatcher = cfg.proxyUrl
 			? new ProxyAgent(cfg.proxyUrl)
 			: new Agent()
@@ -53,34 +45,25 @@ export class TbankHttpClient {
 
 		body.Token = buildTbankToken(body, this.cfg.password)
 
+		const res = await request(url, {
+			method: 'POST',
+			dispatcher: this.dispatcher, // ✅ всегда задан
+			headersTimeout: 15000,
+			bodyTimeout: 15000,
+			headers: {
+				'Content-Type': 'application/json',
+				Accept: 'application/json',
+				'User-Agent': 'mcstarbound-backend/1.0'
+			},
+			body: JSON.stringify(body)
+		})
+
+		// дальше как у тебя...
+		const text = await res.body.text()
+
+		// ✅ если пришёл HTML — логируем текст
 		try {
-			const res = await request(url, {
-				method: 'POST',
-				dispatcher: this.dispatcher, // ✅ теперь не зависит от global proxy
-				headersTimeout: 15000,
-				bodyTimeout: 15000,
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(body)
-			})
-
-			const text = await res.body.text()
-
-			let json: unknown
-			try {
-				json = JSON.parse(text)
-			} catch {
-				// Если прилетел HTML — покажем кусок тела, чтобы понять что это
-				throw new TbankError(
-					'tbank_non_json_response',
-					`Non-JSON response (HTTP ${res.statusCode})`,
-					{
-						url,
-						statusCode: res.statusCode,
-						bodySent: body,
-						responseHead: text.slice(0, 300)
-					}
-				)
-			}
+			const json = JSON.parse(text)
 
 			if (res.statusCode >= 400) {
 				throw new TbankError(
@@ -90,21 +73,30 @@ export class TbankHttpClient {
 				)
 			}
 
-			if (isTbankApiErrorShape(json) && json.Success === false) {
+			if (
+				json &&
+				typeof json === 'object' &&
+				'Success' in json &&
+				json.Success === false
+			) {
 				throw new TbankError(
 					'tbank_api_error',
-					json.Message ?? 'T-Bank API error',
+					(json as any).Message ?? 'T-Bank API error',
 					json
 				)
 			}
 
 			return json as T
-		} catch (e: any) {
-			if (e instanceof TbankError) throw e
+		} catch {
 			throw new TbankError(
-				e?.type ?? 'tbank_error',
-				e?.message ?? 'Unknown T-Bank error',
-				e
+				'tbank_non_json_response',
+				`Non-JSON response (HTTP ${res.statusCode})`,
+				{
+					url,
+					statusCode: res.statusCode,
+					responseHead: text.slice(0, 500),
+					bodySent: body
+				}
 			)
 		}
 	}

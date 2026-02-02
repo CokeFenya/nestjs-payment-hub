@@ -19,57 +19,56 @@ const interfaces_1 = require("../../../../common/interfaces");
 const tbank_constants_1 = require("../config/tbank.constants");
 const tbank_token_util_1 = require("../utils/tbank-token.util");
 const tbank_error_1 = require("./errors/tbank.error");
-const isTbankApiErrorShape = (x) => !!x && typeof x === 'object' && 'Success' in x;
 let TbankHttpClient = class TbankHttpClient {
     constructor(cfg) {
         this.cfg = cfg;
         this.baseUrl = (cfg.isTest ? tbank_constants_1.TBANK_API_BASE_URL_TEST : tbank_constants_1.TBANK_API_BASE_URL_PROD).replace(/\/+$/, '');
-        // ✅ ВАЖНО: если proxyUrl не задан — всё равно ставим DIRECT Agent,
-        // чтобы обойти global ProxyAgent (setGlobalDispatcher)
+        // ✅ ВАЖНО: если proxyUrl не задан — всё равно ставим Agent(),
+        // чтобы перебить setGlobalDispatcher(ProxyAgent)
         this.dispatcher = cfg.proxyUrl
             ? new undici_1.ProxyAgent(cfg.proxyUrl)
             : new undici_1.Agent();
     }
     async post(path, data) {
-        var _a, _b, _c, _d;
+        var _a, _b;
         const url = `${this.baseUrl}/${tbank_constants_1.TBANK_API_VERSION}/${path.replace(/^\/+/, '')}`;
         const body = Object.assign(Object.assign({}, data), { TerminalKey: (_a = data.TerminalKey) !== null && _a !== void 0 ? _a : this.cfg.terminalKey });
         body.Token = (0, tbank_token_util_1.buildTbankToken)(body, this.cfg.password);
+        const res = await (0, undici_1.request)(url, {
+            method: 'POST',
+            dispatcher: this.dispatcher, // ✅ всегда задан
+            headersTimeout: 15000,
+            bodyTimeout: 15000,
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'User-Agent': 'mcstarbound-backend/1.0'
+            },
+            body: JSON.stringify(body)
+        });
+        // дальше как у тебя...
+        const text = await res.body.text();
+        // ✅ если пришёл HTML — логируем текст
         try {
-            const res = await (0, undici_1.request)(url, {
-                method: 'POST',
-                dispatcher: this.dispatcher, // ✅ теперь не зависит от global proxy
-                headersTimeout: 15000,
-                bodyTimeout: 15000,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
-            const text = await res.body.text();
-            let json;
-            try {
-                json = JSON.parse(text);
-            }
-            catch (_e) {
-                // Если прилетел HTML — покажем кусок тела, чтобы понять что это
-                throw new tbank_error_1.TbankError('tbank_non_json_response', `Non-JSON response (HTTP ${res.statusCode})`, {
-                    url,
-                    statusCode: res.statusCode,
-                    bodySent: body,
-                    responseHead: text.slice(0, 300)
-                });
-            }
+            const json = JSON.parse(text);
             if (res.statusCode >= 400) {
                 throw new tbank_error_1.TbankError('tbank_http_error', `HTTP ${res.statusCode}`, json);
             }
-            if (isTbankApiErrorShape(json) && json.Success === false) {
+            if (json &&
+                typeof json === 'object' &&
+                'Success' in json &&
+                json.Success === false) {
                 throw new tbank_error_1.TbankError('tbank_api_error', (_b = json.Message) !== null && _b !== void 0 ? _b : 'T-Bank API error', json);
             }
             return json;
         }
-        catch (e) {
-            if (e instanceof tbank_error_1.TbankError)
-                throw e;
-            throw new tbank_error_1.TbankError((_c = e === null || e === void 0 ? void 0 : e.type) !== null && _c !== void 0 ? _c : 'tbank_error', (_d = e === null || e === void 0 ? void 0 : e.message) !== null && _d !== void 0 ? _d : 'Unknown T-Bank error', e);
+        catch (_c) {
+            throw new tbank_error_1.TbankError('tbank_non_json_response', `Non-JSON response (HTTP ${res.statusCode})`, {
+                url,
+                statusCode: res.statusCode,
+                responseHead: text.slice(0, 500),
+                bodySent: body
+            });
         }
     }
 };
