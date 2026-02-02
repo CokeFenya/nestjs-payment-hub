@@ -18,6 +18,6 @@ import { TbankWebhookGuard } from './webhook/guards/tbank-webhook.guard'
 		TbankMirPayModule
 	],
 	providers: [TbankProviderService, TbankWebhookGuard],
-	exports: [TbankProviderService]
+	exports: [TbankProviderService, TbankCoreModule, TbankWebhookGuard]
 })
 export class TbankModule {}

@@ -18,7 +18,7 @@ const common_1 = require("@nestjs/common");
 const interfaces_1 = require("../../../../common/interfaces");
 const ip_matcher_util_1 = require("../../../../common/utils/ip-matcher.util");
 const tbank_token_util_1 = require("../../core/utils/tbank-token.util");
-const tbank_ip_whitelist_1 = require("../constants/tbank-ip-whitelist");
+const constants_1 = require("../constants");
 let TbankWebhookGuard = TbankWebhookGuard_1 = class TbankWebhookGuard {
     constructor(cfg) {
         this.cfg = cfg;
@@ -30,7 +30,7 @@ let TbankWebhookGuard = TbankWebhookGuard_1 = class TbankWebhookGuard {
         const body = (_a = req.body) !== null && _a !== void 0 ? _a : {};
         // 1) IP whitelist
         const clientIp = this.extractClientIp(req);
-        if (!(0, ip_matcher_util_1.isIpAllowed)(clientIp, tbank_ip_whitelist_1.TBANK_IP_WHITELIST)) {
+        if (!(0, ip_matcher_util_1.isIpAllowed)(clientIp, constants_1.TBANK_IP_WHITELIST)) {
             this.logger.warn(`Blocked webhook request from unauthorized IP: ${clientIp}`);
             throw new common_1.ForbiddenException('Webhook request is not from T-Bank');
         }
@@ -40,8 +40,8 @@ let TbankWebhookGuard = TbankWebhookGuard_1 = class TbankWebhookGuard {
             this.logger.warn('Webhook without Token');
             throw new common_1.ForbiddenException('Invalid T-Bank webhook: missing Token');
         }
-        // По доке: Token считается по корневым полям, исключая Token и вложенные Data/Receipt. :contentReference[oaicite:3]{index=3}
-        const expected = (0, tbank_token_util_1.buildTbankToken)(body, this.cfg.password, new Set(['Token', 'Data', 'Receipt']));
+        // ✅ используем дефолтный игнор ключей из util (Token, Receipt, DATA, Data, Items)
+        const expected = (0, tbank_token_util_1.buildTbankToken)(body, this.cfg.password);
         if (expected !== token) {
             this.logger.warn('Webhook Token mismatch');
             throw new common_1.ForbiddenException('Invalid T-Bank webhook: Token mismatch');

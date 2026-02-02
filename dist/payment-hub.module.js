@@ -25,7 +25,13 @@ let PaymentHubModule = PaymentHubModule_1 = class PaymentHubModule {
                 tbank_module_1.TbankModule
             ],
             providers: [payment_hub_service_1.PaymentHubService],
-            exports: [payment_hub_service_1.PaymentHubService],
+            exports: [
+                payment_hub_service_1.PaymentHubService,
+                // ✅ важно: пробросить модули наружу, чтобы их providers (symbols/guards) были доступны
+                yookassa_module_1.YookassaModule,
+                crypto_1.CryptoModule,
+                tbank_module_1.TbankModule
+            ],
             global: true
         };
     }
@@ -39,7 +45,13 @@ let PaymentHubModule = PaymentHubModule_1 = class PaymentHubModule {
                 tbank_module_1.TbankModule
             ],
             providers: [payment_hub_service_1.PaymentHubService],
-            exports: [payment_hub_service_1.PaymentHubService],
+            exports: [
+                payment_hub_service_1.PaymentHubService,
+                // ✅ важно
+                yookassa_module_1.YookassaModule,
+                crypto_1.CryptoModule,
+                tbank_module_1.TbankModule
+            ],
             global: true
         };
     }

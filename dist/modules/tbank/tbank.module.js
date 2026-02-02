@@ -28,6 +28,6 @@ exports.TbankModule = TbankModule = __decorate([
             mirpay_module_1.TbankMirPayModule
         ],
         providers: [tbank_provider_service_1.TbankProviderService, tbank_webhook_guard_1.TbankWebhookGuard],
-        exports: [tbank_provider_service_1.TbankProviderService]
+        exports: [tbank_provider_service_1.TbankProviderService, tbank_core_module_1.TbankCoreModule, tbank_webhook_guard_1.TbankWebhookGuard]
     })
 ], TbankModule);

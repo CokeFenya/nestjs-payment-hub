@@ -23,7 +23,14 @@ export class PaymentHubModule {
 				TbankModule
 			],
 			providers: [PaymentHubService],
-			exports: [PaymentHubService],
+			exports: [
+				PaymentHubService,
+
+				// ✅ важно: пробросить модули наружу, чтобы их providers (symbols/guards) были доступны
+				YookassaModule,
+				CryptoModule,
+				TbankModule
+			],
 			global: true
 		}
 	}
@@ -40,7 +47,14 @@ export class PaymentHubModule {
 				TbankModule
 			],
 			providers: [PaymentHubService],
-			exports: [PaymentHubService],
+			exports: [
+				PaymentHubService,
+
+				// ✅ важно
+				YookassaModule,
+				CryptoModule,
+				TbankModule
+			],
 			global: true
 		}
 	}

@@ -7,14 +7,13 @@ import {
 	Logger
 } from '@nestjs/common'
 import type { Request } from 'express'
-
 import {
 	TbankModuleOptions,
 	TbankOptionsSymbol
 } from '../../../../common/interfaces'
 import { isIpAllowed } from '../../../../common/utils/ip-matcher.util'
 import { buildTbankToken } from '../../core/utils/tbank-token.util'
-import { TBANK_IP_WHITELIST } from '../constants/tbank-ip-whitelist'
+import { TBANK_IP_WHITELIST } from '../constants'
 
 @Injectable()
 export class TbankWebhookGuard implements CanActivate {
@@ -47,12 +46,8 @@ export class TbankWebhookGuard implements CanActivate {
 			)
 		}
 
-		// По доке: Token считается по корневым полям, исключая Token и вложенные Data/Receipt. :contentReference[oaicite:3]{index=3}
-		const expected = buildTbankToken(
-			body,
-			this.cfg.password,
-			new Set(['Token', 'Data', 'Receipt'])
-		)
+		// ✅ используем дефолтный игнор ключей из util (Token, Receipt, DATA, Data, Items)
+		const expected = buildTbankToken(body, this.cfg.password)
 
 		if (expected !== token) {
 			this.logger.warn('Webhook Token mismatch')
