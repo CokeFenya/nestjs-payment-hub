@@ -12,16 +12,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentHubService = void 0;
 const common_1 = require("@nestjs/common");
 const crypto_provider_service_1 = require("./modules/crypto/crypto-provider.service");
+const tbank_provider_service_1 = require("./modules/tbank/tbank-provider.service");
 const yookassa_provider_service_1 = require("./modules/yookassa/yookassa-provider.service");
 let PaymentHubService = class PaymentHubService {
-    constructor(yookassa, crypto) {
+    constructor(yookassa, crypto, tbank) {
         this.yookassa = yookassa;
         this.crypto = crypto;
+        this.tbank = tbank;
     }
 };
 exports.PaymentHubService = PaymentHubService;
 exports.PaymentHubService = PaymentHubService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [yookassa_provider_service_1.YookassaProviderService,
-        crypto_provider_service_1.CryptoProviderService])
+        crypto_provider_service_1.CryptoProviderService,
+        tbank_provider_service_1.TbankProviderService])
 ], PaymentHubService);
