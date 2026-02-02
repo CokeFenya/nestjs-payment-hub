@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ProxyAgent, request } from 'undici'
+import { Agent, ProxyAgent, request } from 'undici'
 
 import {
 	TbankModuleOptions,
@@ -16,18 +16,14 @@ import { TbankError } from './errors/tbank.error'
 type TbankApiErrorShape = {
 	Success: boolean
 	Message?: string
-	Details?: string
-	ErrorCode?: string
 	[k: string]: any
 }
-
-function isTbankApiErrorShape(x: unknown): x is TbankApiErrorShape {
-	return !!x && typeof x === 'object' && 'Success' in (x as any)
-}
+const isTbankApiErrorShape = (x: unknown): x is TbankApiErrorShape =>
+	!!x && typeof x === 'object' && 'Success' in (x as any)
 
 @Injectable()
 export class TbankHttpClient {
-	private readonly dispatcher?: ProxyAgent
+	private readonly dispatcher: Agent | ProxyAgent
 	private readonly baseUrl: string
 
 	public constructor(
@@ -36,9 +32,12 @@ export class TbankHttpClient {
 		this.baseUrl = (
 			cfg.isTest ? TBANK_API_BASE_URL_TEST : TBANK_API_BASE_URL_PROD
 		).replace(/\/+$/, '')
+
+		// ✅ ВАЖНО: если proxyUrl не задан — всё равно ставим DIRECT Agent,
+		// чтобы обойти global ProxyAgent (setGlobalDispatcher)
 		this.dispatcher = cfg.proxyUrl
 			? new ProxyAgent(cfg.proxyUrl)
-			: undefined
+			: new Agent()
 	}
 
 	public async post<T = any>(
@@ -57,14 +56,31 @@ export class TbankHttpClient {
 		try {
 			const res = await request(url, {
 				method: 'POST',
-				dispatcher: this.dispatcher,
+				dispatcher: this.dispatcher, // ✅ теперь не зависит от global proxy
 				headersTimeout: 15000,
 				bodyTimeout: 15000,
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(body)
 			})
 
-			const json: unknown = await res.body.json()
+			const text = await res.body.text()
+
+			let json: unknown
+			try {
+				json = JSON.parse(text)
+			} catch {
+				// Если прилетел HTML — покажем кусок тела, чтобы понять что это
+				throw new TbankError(
+					'tbank_non_json_response',
+					`Non-JSON response (HTTP ${res.statusCode})`,
+					{
+						url,
+						statusCode: res.statusCode,
+						bodySent: body,
+						responseHead: text.slice(0, 300)
+					}
+				)
+			}
 
 			if (res.statusCode >= 400) {
 				throw new TbankError(
@@ -74,7 +90,6 @@ export class TbankHttpClient {
 				)
 			}
 
-			// T-Bank часто отдаёт 200 + Success=false
 			if (isTbankApiErrorShape(json) && json.Success === false) {
 				throw new TbankError(
 					'tbank_api_error',

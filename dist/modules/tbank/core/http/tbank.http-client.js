@@ -19,16 +19,16 @@ const interfaces_1 = require("../../../../common/interfaces");
 const tbank_constants_1 = require("../config/tbank.constants");
 const tbank_token_util_1 = require("../utils/tbank-token.util");
 const tbank_error_1 = require("./errors/tbank.error");
-function isTbankApiErrorShape(x) {
-    return !!x && typeof x === 'object' && 'Success' in x;
-}
+const isTbankApiErrorShape = (x) => !!x && typeof x === 'object' && 'Success' in x;
 let TbankHttpClient = class TbankHttpClient {
     constructor(cfg) {
         this.cfg = cfg;
         this.baseUrl = (cfg.isTest ? tbank_constants_1.TBANK_API_BASE_URL_TEST : tbank_constants_1.TBANK_API_BASE_URL_PROD).replace(/\/+$/, '');
+        // ✅ ВАЖНО: если proxyUrl не задан — всё равно ставим DIRECT Agent,
+        // чтобы обойти global ProxyAgent (setGlobalDispatcher)
         this.dispatcher = cfg.proxyUrl
             ? new undici_1.ProxyAgent(cfg.proxyUrl)
-            : undefined;
+            : new undici_1.Agent();
     }
     async post(path, data) {
         var _a, _b, _c, _d;
@@ -38,17 +38,29 @@ let TbankHttpClient = class TbankHttpClient {
         try {
             const res = await (0, undici_1.request)(url, {
                 method: 'POST',
-                dispatcher: this.dispatcher,
+                dispatcher: this.dispatcher, // ✅ теперь не зависит от global proxy
                 headersTimeout: 15000,
                 bodyTimeout: 15000,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             });
-            const json = await res.body.json();
+            const text = await res.body.text();
+            let json;
+            try {
+                json = JSON.parse(text);
+            }
+            catch (_e) {
+                // Если прилетел HTML — покажем кусок тела, чтобы понять что это
+                throw new tbank_error_1.TbankError('tbank_non_json_response', `Non-JSON response (HTTP ${res.statusCode})`, {
+                    url,
+                    statusCode: res.statusCode,
+                    bodySent: body,
+                    responseHead: text.slice(0, 300)
+                });
+            }
             if (res.statusCode >= 400) {
                 throw new tbank_error_1.TbankError('tbank_http_error', `HTTP ${res.statusCode}`, json);
             }
-            // T-Bank часто отдаёт 200 + Success=false
             if (isTbankApiErrorShape(json) && json.Success === false) {
                 throw new tbank_error_1.TbankError('tbank_api_error', (_b = json.Message) !== null && _b !== void 0 ? _b : 'T-Bank API error', json);
             }
