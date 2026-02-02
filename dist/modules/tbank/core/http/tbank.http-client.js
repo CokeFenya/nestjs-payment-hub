@@ -26,8 +26,7 @@ let TbankHttpClient = class TbankHttpClient {
     constructor(cfg) {
         this.cfg = cfg;
         this.baseUrl = (cfg.isTest ? tbank_constants_1.TBANK_API_BASE_URL_TEST : tbank_constants_1.TBANK_API_BASE_URL_PROD).replace(/\/+$/, '');
-        // ✅ если прокси задан явно для TBANK — используем его
-        // ✅ иначе — принудительно прямой Agent (обходит global setGlobalDispatcher)
+        // ✅ NO PROXY для tbank по умолчанию (обходит setGlobalDispatcher)
         this.dispatcher = cfg.proxyUrl
             ? new undici_1.ProxyAgent(cfg.proxyUrl)
             : new undici_1.Agent();
@@ -40,18 +39,19 @@ let TbankHttpClient = class TbankHttpClient {
         try {
             const res = await (0, undici_1.request)(url, {
                 method: 'POST',
-                dispatcher: this.dispatcher, // ✅ всегда НЕ глобальный
+                dispatcher: this.dispatcher,
                 headersTimeout: 15000,
                 bodyTimeout: 15000,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             });
+            // ✅ читаем тело РОВНО 1 раз
+            const text = await res.body.text();
             let json;
             try {
-                json = await res.body.json();
+                json = text ? JSON.parse(text) : {};
             }
             catch (_e) {
-                const text = await res.body.text();
                 throw new tbank_error_1.TbankError('tbank_non_json_response', `Non-JSON response (HTTP ${res.statusCode})`, {
                     url,
                     statusCode: res.statusCode,

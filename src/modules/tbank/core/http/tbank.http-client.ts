@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { Agent, ProxyAgent, request } from 'undici'
-
 import {
 	TbankModuleOptions,
 	TbankOptionsSymbol
@@ -27,7 +26,6 @@ function isTbankApiErrorShape(x: unknown): x is TbankApiErrorShape {
 
 @Injectable()
 export class TbankHttpClient {
-	// ВАЖНО: dispatcher всегда задан, чтобы НЕ использовать глобальный proxy dispatcher
 	private readonly dispatcher: Agent | ProxyAgent
 	private readonly baseUrl: string
 
@@ -38,8 +36,7 @@ export class TbankHttpClient {
 			cfg.isTest ? TBANK_API_BASE_URL_TEST : TBANK_API_BASE_URL_PROD
 		).replace(/\/+$/, '')
 
-		// ✅ если прокси задан явно для TBANK — используем его
-		// ✅ иначе — принудительно прямой Agent (обходит global setGlobalDispatcher)
+		// ✅ NO PROXY для tbank по умолчанию (обходит setGlobalDispatcher)
 		this.dispatcher = cfg.proxyUrl
 			? new ProxyAgent(cfg.proxyUrl)
 			: new Agent()
@@ -61,18 +58,20 @@ export class TbankHttpClient {
 		try {
 			const res = await request(url, {
 				method: 'POST',
-				dispatcher: this.dispatcher, // ✅ всегда НЕ глобальный
+				dispatcher: this.dispatcher,
 				headersTimeout: 15000,
 				bodyTimeout: 15000,
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(body)
 			})
 
+			// ✅ читаем тело РОВНО 1 раз
+			const text = await res.body.text()
+
 			let json: unknown
 			try {
-				json = await res.body.json()
+				json = text ? JSON.parse(text) : {}
 			} catch {
-				const text = await res.body.text()
 				throw new TbankError(
 					'tbank_non_json_response',
 					`Non-JSON response (HTTP ${res.statusCode})`,
