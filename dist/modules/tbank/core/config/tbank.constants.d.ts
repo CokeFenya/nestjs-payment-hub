@@ -1,4 +1,3 @@
-export declare const TBANK_DEFAULTS: {
-    readonly baseUrl: "https://rest-api-test.tinkoff.ru";
-    readonly timeoutMs: 15000;
-};
+export declare const TBANK_API_BASE_URL_PROD = "https://securepay.tinkoff.ru";
+export declare const TBANK_API_BASE_URL_TEST = "https://rest-api-test.tinkoff.ru";
+export declare const TBANK_API_VERSION = "v2";

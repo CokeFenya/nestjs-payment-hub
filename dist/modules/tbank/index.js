@@ -14,14 +14,13 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// src/modules/tbank/index.ts
 __exportStar(require("./tbank-provider.service"), exports);
 __exportStar(require("./tbank.module"), exports);
 __exportStar(require("./core/config/tbank.constants"), exports);
 __exportStar(require("./core/http/errors/tbank.error"), exports);
+__exportStar(require("./core/http/tbank.http-client"), exports);
 __exportStar(require("./core/tbank-core.module"), exports);
 __exportStar(require("./payment/enums"), exports);
 __exportStar(require("./payment/interfaces"), exports);
-__exportStar(require("./payment/payment.module"), exports);
-__exportStar(require("./payment/payment.service"), exports);
-__exportStar(require("./webhook"), exports); // важно
+__exportStar(require("./sbp/enums"), exports);
+__exportStar(require("./sbp/interfaces"), exports);

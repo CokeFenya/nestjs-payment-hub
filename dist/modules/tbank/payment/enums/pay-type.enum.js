@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TbankPayTypeEnum = void 0;
-var TbankPayTypeEnum;
-(function (TbankPayTypeEnum) {
-    TbankPayTypeEnum["ONE_STAGE"] = "O";
-    TbankPayTypeEnum["TWO_STAGE"] = "T";
-})(TbankPayTypeEnum || (exports.TbankPayTypeEnum = TbankPayTypeEnum = {}));
+exports.PayTypeEnum = void 0;
+var PayTypeEnum;
+(function (PayTypeEnum) {
+    PayTypeEnum["ONE_STAGE"] = "O";
+    PayTypeEnum["TWO_STAGE"] = "T"; // двухстадийная
+})(PayTypeEnum || (exports.PayTypeEnum = PayTypeEnum = {}));

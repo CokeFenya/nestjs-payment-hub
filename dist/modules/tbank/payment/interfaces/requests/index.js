@@ -16,9 +16,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./cancel.request"), exports);
 __exportStar(require("./confirm.request"), exports);
+__exportStar(require("./finish-authorize.request"), exports);
 __exportStar(require("./get-state.request"), exports);
 __exportStar(require("./init.request"), exports);
-__exportStar(require("./mirpay-deeplink.request"), exports);
-__exportStar(require("./sberpay-link.request"), exports);
-__exportStar(require("./sbp-get-qr.request"), exports);
-__exportStar(require("./tpay-link.request"), exports);

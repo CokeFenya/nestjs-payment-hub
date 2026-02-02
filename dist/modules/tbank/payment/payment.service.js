@@ -16,35 +16,20 @@ let TbankPaymentService = class TbankPaymentService {
     constructor(http) {
         this.http = http;
     }
-    /** Создание платежа (редирект на PaymentURL) */
     init(data) {
-        return this.http.post('/v2/Init', data);
+        return this.http.post('Init', data); // /v2/Init :contentReference[oaicite:12]{index=12}
     }
-    /** Проверка статуса */
+    finishAuthorize(data) {
+        return this.http.post('FinishAuthorize', data); // /v2/FinishAuthorize :contentReference[oaicite:13]{index=13}
+    }
+    confirm(data) {
+        return this.http.post('Confirm', data); // /v2/Confirm :contentReference[oaicite:14]{index=14}
+    }
+    cancel(data) {
+        return this.http.post('Cancel', data); // /v2/Cancel :contentReference[oaicite:15]{index=15}
+    }
     getState(data) {
-        return this.http.post('/v2/GetState', data);
-    }
-    // ===== SBP =====
-    sbpGetQr(data) {
-        return this.http.post('/v2/GetQr', data);
-    }
-    // ===== T-Pay =====
-    tPayQr(paymentId) {
-        // возвращает SVG строкой
-        return this.http.get(`/v2/TinkoffPay/${paymentId}/QR`);
-    }
-    tPayLink(params) {
-        const { paymentId, version } = params;
-        return this.http.get(`/v2/TinkoffPay/transactions/${paymentId}/versions/${version}/link`);
-    }
-    // ===== SberPay =====
-    sberPayLink(params) {
-        const { paymentId } = params;
-        return this.http.get(`/v2/SberPay/transactions/${paymentId}/link`);
-    }
-    // ===== MirPay =====
-    mirPayDeepLink(data) {
-        return this.http.post('/v2/MirPay/GetDeepLink', data);
+        return this.http.post('GetState', data); // /v2/GetState :contentReference[oaicite:16]{index=16}
     }
 };
 exports.TbankPaymentService = TbankPaymentService;

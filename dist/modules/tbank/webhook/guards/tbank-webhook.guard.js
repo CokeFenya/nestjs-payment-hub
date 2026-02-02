@@ -11,39 +11,53 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var TbankWebhookGuard_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankWebhookGuard = void 0;
 const common_1 = require("@nestjs/common");
 const interfaces_1 = require("../../../../common/interfaces");
-const tbank_http_client_1 = require("../../core/http/tbank.http-client");
-let TbankWebhookGuard = class TbankWebhookGuard {
-    constructor(opts) {
-        this.opts = opts;
+const ip_matcher_util_1 = require("../../../../common/utils/ip-matcher.util");
+const tbank_token_util_1 = require("../../core/utils/tbank-token.util");
+const tbank_ip_whitelist_1 = require("../constants/tbank-ip-whitelist");
+let TbankWebhookGuard = TbankWebhookGuard_1 = class TbankWebhookGuard {
+    constructor(cfg) {
+        this.cfg = cfg;
+        this.logger = new common_1.Logger(TbankWebhookGuard_1.name);
     }
-    canActivate(ctx) {
-        var _a, _b, _c;
-        const req = ctx.switchToHttp().getRequest();
-        const body = ((_a = req.body) !== null && _a !== void 0 ? _a : {});
-        const received = String((_b = body.Token) !== null && _b !== void 0 ? _b : '');
-        if (!received)
-            throw new common_1.ForbiddenException('Missing webhook token');
-        const expected = (0, tbank_http_client_1.createTbankToken)(body, this.opts.password, [
-            'Token',
-            'Password'
-        ]);
-        if (received !== expected)
-            throw new common_1.ForbiddenException('Invalid webhook token');
-        if (String((_c = body.TerminalKey) !== null && _c !== void 0 ? _c : '') !== this.opts.terminalKey) {
-            throw new common_1.ForbiddenException('Invalid terminal key');
+    canActivate(context) {
+        var _a;
+        const req = context.switchToHttp().getRequest();
+        const body = (_a = req.body) !== null && _a !== void 0 ? _a : {};
+        // 1) IP whitelist
+        const clientIp = this.extractClientIp(req);
+        if (!(0, ip_matcher_util_1.isIpAllowed)(clientIp, tbank_ip_whitelist_1.TBANK_IP_WHITELIST)) {
+            this.logger.warn(`Blocked webhook request from unauthorized IP: ${clientIp}`);
+            throw new common_1.ForbiddenException('Webhook request is not from T-Bank');
         }
-        if (!body.OrderId || !body.PaymentId || !body.Status) {
-            throw new common_1.ForbiddenException('Invalid webhook payload');
+        // 2) Token verification
+        const token = body === null || body === void 0 ? void 0 : body.Token;
+        if (!token || typeof token !== 'string') {
+            this.logger.warn('Webhook without Token');
+            throw new common_1.ForbiddenException('Invalid T-Bank webhook: missing Token');
+        }
+        // По доке: Token считается по корневым полям, исключая Token и вложенные Data/Receipt. :contentReference[oaicite:3]{index=3}
+        const expected = (0, tbank_token_util_1.buildTbankToken)(body, this.cfg.password, new Set(['Token', 'Data', 'Receipt']));
+        if (expected !== token) {
+            this.logger.warn('Webhook Token mismatch');
+            throw new common_1.ForbiddenException('Invalid T-Bank webhook: Token mismatch');
         }
         return true;
     }
+    extractClientIp(req) {
+        var _a;
+        const xff = req.headers['x-forwarded-for'];
+        if (typeof xff === 'string')
+            return xff.split(',')[0].trim();
+        return (_a = req.socket.remoteAddress) !== null && _a !== void 0 ? _a : '';
+    }
 };
 exports.TbankWebhookGuard = TbankWebhookGuard;
-exports.TbankWebhookGuard = TbankWebhookGuard = __decorate([
+exports.TbankWebhookGuard = TbankWebhookGuard = TbankWebhookGuard_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)(interfaces_1.TbankOptionsSymbol)),
     __metadata("design:paramtypes", [Object])

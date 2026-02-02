@@ -2,6 +2,13 @@ export declare const TbankOptionsSymbol: unique symbol;
 export type TbankModuleOptions = {
     terminalKey: string;
     password: string;
-    baseUrl?: string;
-    timeoutMs?: number;
+    /**
+     * Если нужно принудительно гонять через тестовый контур.
+     * Если false/undefined — используем production baseUrl.
+     */
+    isTest?: boolean;
+    /**
+     * Если у тебя уже есть корпоративный прокси как в YooKassa — оставим.
+     */
+    proxyUrl?: string;
 };

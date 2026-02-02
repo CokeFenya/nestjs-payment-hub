@@ -1,4 +1,4 @@
-export declare enum TbankPayTypeEnum {
-    ONE_STAGE = "O",
+export declare enum PayTypeEnum {
+    ONE_STAGE = "O",// одностадийная
     TWO_STAGE = "T"
 }

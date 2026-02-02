@@ -1,11 +1,8 @@
-import type { TbankModuleOptions } from '../../../../common/interfaces';
-export declare function createTbankToken(root: Record<string, unknown>, password: string, excludeKeys?: readonly string[]): string;
+import { TbankModuleOptions } from '../../../../common/interfaces';
 export declare class TbankHttpClient {
-    private readonly http;
-    private readonly terminalKey;
-    private readonly password;
-    constructor(options: TbankModuleOptions);
-    post<TResponse, TBody extends object>(path: string, body: TBody): Promise<TResponse>;
-    get<TResponse>(path: string, params?: Record<string, unknown>): Promise<TResponse>;
-    private sign;
+    private readonly cfg;
+    private readonly dispatcher?;
+    private readonly baseUrl;
+    constructor(cfg: TbankModuleOptions);
+    post<T = any>(path: string, data: Record<string, any>): Promise<T>;
 }

@@ -2,9 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankError = void 0;
 class TbankError extends Error {
-    constructor(message, payload) {
+    constructor(type, message, raw) {
         super(message);
-        this.payload = payload;
+        this.type = type;
+        this.message = message;
+        this.raw = raw;
     }
 }
 exports.TbankError = TbankError;

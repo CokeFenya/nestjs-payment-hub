@@ -1,9 +1,9 @@
-import type { TbankPaymentStatusEnum } from '../../enums';
-import type { TbankCommonResponse } from './common.response';
-export interface TbankInitResponse extends TbankCommonResponse {
-    PaymentId?: string;
-    OrderId?: string;
-    Amount?: number;
-    Status?: TbankPaymentStatusEnum | string;
+import type { TbankBaseResponse } from './base.response';
+export interface InitResponse extends TbankBaseResponse {
+    TerminalKey: string;
+    Amount: number;
+    OrderId: string;
+    PaymentId: string;
+    Status: string;
     PaymentURL?: string;
 }

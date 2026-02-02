@@ -1,8 +1,6 @@
-export interface TbankCancelRequest {
+export interface CancelRequest {
     PaymentId: string;
     Amount?: number;
     IP?: string;
-    Receipt?: unknown;
-    TerminalKey?: string;
-    Token?: string;
+    Receipt?: any;
 }

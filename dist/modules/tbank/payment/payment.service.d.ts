@@ -1,16 +1,11 @@
 import { TbankHttpClient } from '../core/http/tbank.http-client';
-import type { TbankGetStateRequest, TbankInitRequest, TbankMirPayDeepLinkRequest, TbankSberPayLinkParams, TbankSbpGetQrRequest, TbankTPayLinkParams } from './interfaces/requests';
-import type { TbankGetStateResponse, TbankInitResponse, TbankMirPayDeepLinkResponse, TbankSberPayLinkResponse, TbankSbpGetQrResponse, TbankTPayLinkResponse } from './interfaces/responses';
+import type { CancelRequest, ConfirmRequest, FinishAuthorizeRequest, GetStateRequest, GetStateResponse, InitRequest, InitResponse } from './interfaces';
 export declare class TbankPaymentService {
     private readonly http;
     constructor(http: TbankHttpClient);
-    /** Создание платежа (редирект на PaymentURL) */
-    init(data: TbankInitRequest): Promise<TbankInitResponse>;
-    /** Проверка статуса */
-    getState(data: TbankGetStateRequest): Promise<TbankGetStateResponse>;
-    sbpGetQr(data: TbankSbpGetQrRequest): Promise<TbankSbpGetQrResponse>;
-    tPayQr(paymentId: number): Promise<string>;
-    tPayLink(params: TbankTPayLinkParams): Promise<TbankTPayLinkResponse>;
-    sberPayLink(params: TbankSberPayLinkParams): Promise<TbankSberPayLinkResponse>;
-    mirPayDeepLink(data: TbankMirPayDeepLinkRequest): Promise<TbankMirPayDeepLinkResponse>;
+    init(data: InitRequest): Promise<InitResponse>;
+    finishAuthorize(data: FinishAuthorizeRequest): Promise<any>;
+    confirm(data: ConfirmRequest): Promise<any>;
+    cancel(data: CancelRequest): Promise<any>;
+    getState(data: GetStateRequest): Promise<GetStateResponse>;
 }

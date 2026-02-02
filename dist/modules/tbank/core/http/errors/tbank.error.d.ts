@@ -1,4 +1,6 @@
 export declare class TbankError extends Error {
-    readonly payload?: unknown;
-    constructor(message: string, payload?: unknown);
+    readonly type: string;
+    readonly message: string;
+    readonly raw?: any;
+    constructor(type: string, message: string, raw?: any);
 }

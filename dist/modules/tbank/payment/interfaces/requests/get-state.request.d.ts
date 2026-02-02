@@ -1,6 +1,4 @@
-export interface TbankGetStateRequest {
+export interface GetStateRequest {
     PaymentId: string;
     IP?: string;
-    TerminalKey?: string;
-    Token?: string;
 }

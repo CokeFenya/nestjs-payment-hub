@@ -1,67 +1,69 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankHttpClient = void 0;
-exports.createTbankToken = createTbankToken;
-const axios_1 = require("axios");
-const crypto_1 = require("crypto");
+const common_1 = require("@nestjs/common");
+const undici_1 = require("undici");
+const interfaces_1 = require("../../../../common/interfaces");
 const tbank_constants_1 = require("../config/tbank.constants");
+const tbank_token_util_1 = require("../utils/tbank-token.util");
 const tbank_error_1 = require("./errors/tbank.error");
-function isPlainObject(v) {
-    return typeof v === 'object' && v !== null && !Array.isArray(v);
+function isTbankApiErrorShape(x) {
+    return !!x && typeof x === 'object' && 'Success' in x;
 }
-function createTbankToken(root, password, excludeKeys = ['Token', 'Password']) {
-    const pairs = [];
-    for (const [k, v] of Object.entries(root)) {
-        if (excludeKeys.includes(k))
-            continue;
-        if (isPlainObject(v) || Array.isArray(v))
-            continue;
-        const pv = v;
-        if (pv === undefined)
-            continue;
-        pairs.push([k, String(pv)]);
+let TbankHttpClient = class TbankHttpClient {
+    constructor(cfg) {
+        this.cfg = cfg;
+        this.baseUrl = (cfg.isTest ? tbank_constants_1.TBANK_API_BASE_URL_TEST : tbank_constants_1.TBANK_API_BASE_URL_PROD).replace(/\/+$/, '');
+        this.dispatcher = cfg.proxyUrl
+            ? new undici_1.ProxyAgent(cfg.proxyUrl)
+            : undefined;
     }
-    pairs.push(['Password', password]);
-    pairs.sort(([a], [b]) => a.localeCompare(b));
-    const concatenated = pairs.map(([, v]) => v).join('');
-    return (0, crypto_1.createHash)('sha256')
-        .update(concatenated, 'utf8')
-        .digest('hex')
-        .toUpperCase();
-}
-class TbankHttpClient {
-    constructor(options) {
-        var _a, _b;
-        const baseUrl = (_a = options.baseUrl) !== null && _a !== void 0 ? _a : tbank_constants_1.TBANK_DEFAULTS.baseUrl;
-        const timeout = (_b = options.timeoutMs) !== null && _b !== void 0 ? _b : tbank_constants_1.TBANK_DEFAULTS.timeoutMs;
-        this.terminalKey = options.terminalKey;
-        this.password = options.password;
-        this.http = axios_1.default.create({
-            baseURL: baseUrl,
-            timeout,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    }
-    async post(path, body) {
-        var _a, _b;
-        const signed = this.sign(body);
-        const { data } = await this.http.post(path, signed);
-        if (isPlainObject(data) && data.Success === false) {
-            throw new tbank_error_1.TbankError(String((_b = (_a = data.Message) !== null && _a !== void 0 ? _a : data.Details) !== null && _b !== void 0 ? _b : 'T-Bank API error'), data);
+    async post(path, data) {
+        var _a, _b, _c, _d;
+        const url = `${this.baseUrl}/${tbank_constants_1.TBANK_API_VERSION}/${path.replace(/^\/+/, '')}`;
+        const body = Object.assign(Object.assign({}, data), { TerminalKey: (_a = data.TerminalKey) !== null && _a !== void 0 ? _a : this.cfg.terminalKey });
+        body.Token = (0, tbank_token_util_1.buildTbankToken)(body, this.cfg.password);
+        try {
+            const res = await (0, undici_1.request)(url, {
+                method: 'POST',
+                dispatcher: this.dispatcher,
+                headersTimeout: 15000,
+                bodyTimeout: 15000,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const json = await res.body.json();
+            if (res.statusCode >= 400) {
+                throw new tbank_error_1.TbankError('tbank_http_error', `HTTP ${res.statusCode}`, json);
+            }
+            // T-Bank часто отдаёт 200 + Success=false
+            if (isTbankApiErrorShape(json) && json.Success === false) {
+                throw new tbank_error_1.TbankError('tbank_api_error', (_b = json.Message) !== null && _b !== void 0 ? _b : 'T-Bank API error', json);
+            }
+            return json;
         }
-        return data;
+        catch (e) {
+            if (e instanceof tbank_error_1.TbankError)
+                throw e;
+            throw new tbank_error_1.TbankError((_c = e === null || e === void 0 ? void 0 : e.type) !== null && _c !== void 0 ? _c : 'tbank_error', (_d = e === null || e === void 0 ? void 0 : e.message) !== null && _d !== void 0 ? _d : 'Unknown T-Bank error', e);
+        }
     }
-    async get(path, params) {
-        const { data } = await this.http.get(path, { params });
-        return data;
-    }
-    sign(body) {
-        const merged = Object.assign({}, body);
-        if (!merged.TerminalKey)
-            merged.TerminalKey = this.terminalKey;
-        if (!merged.Token)
-            merged.Token = createTbankToken(merged, this.password);
-        return merged;
-    }
-}
+};
 exports.TbankHttpClient = TbankHttpClient;
+exports.TbankHttpClient = TbankHttpClient = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, common_1.Inject)(interfaces_1.TbankOptionsSymbol)),
+    __metadata("design:paramtypes", [Object])
+], TbankHttpClient);

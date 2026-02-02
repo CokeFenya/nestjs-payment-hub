@@ -1,3 +1,4 @@
-export * from './decorators/tbank-webhook.decorator';
+export * from './decorators';
+export * from './enums';
 export * from './guards/tbank-webhook.guard';
-export * from './tbank-webhook.module';
+export * from './interfaces';

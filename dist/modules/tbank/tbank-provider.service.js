@@ -11,14 +11,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TbankProviderService = void 0;
 const common_1 = require("@nestjs/common");
+const mirpay_service_1 = require("./mirpay/mirpay.service");
 const payment_service_1 = require("./payment/payment.service");
+const sbp_service_1 = require("./sbp/sbp.service");
+const tpay_service_1 = require("./tpay/tpay.service");
 let TbankProviderService = class TbankProviderService {
-    constructor(payments) {
+    constructor(payments, sbp, tpay, mirpay) {
         this.payments = payments;
+        this.sbp = sbp;
+        this.tpay = tpay;
+        this.mirpay = mirpay;
     }
 };
 exports.TbankProviderService = TbankProviderService;
 exports.TbankProviderService = TbankProviderService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [payment_service_1.TbankPaymentService])
+    __metadata("design:paramtypes", [payment_service_1.TbankPaymentService,
+        sbp_service_1.TbankSbpService,
+        tpay_service_1.TbankTpayService,
+        mirpay_service_1.TbankMirPayService])
 ], TbankProviderService);

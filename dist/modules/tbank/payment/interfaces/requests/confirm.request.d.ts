@@ -1,7 +1,5 @@
-export interface TbankConfirmRequest {
+export interface ConfirmRequest {
     PaymentId: string;
     Amount?: number;
     IP?: string;
-    TerminalKey?: string;
-    Token?: string;
 }
